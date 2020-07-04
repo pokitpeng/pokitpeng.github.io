@@ -10,20 +10,22 @@ draft: false
 ```shell
 # 设置当前终端代理
 export ALL_PROXY=http://192.168.30.106:1080
-
 # 取消代理
 unset ALL_RPOXY
 
 # git添加代理
 git config --global http.proxy http://192.168.30.106:1080
 git config --global https.proxy http://192.168.30.106:1080 
-
 # 检查
 git config --list
-
 # 取消
 git config --global --unset http.proxy
 git config --global --unset https.proxy
+
+# 只对github.com进行代理
+git config --global http.https://github.com.proxy http://127.0.0.1:1080
+#取消代理
+git config --global --unset http.https://github.com.proxy
 ```
 
 ### 永久关闭防火墙
@@ -35,8 +37,8 @@ systemctl stop firewalld.service && systemctl disable firewalld.service
 ```shell
 vi /etc/sysconfig/network-scripts/ifcfg-*
 # 修改内容：
-BOOTPROTO=static #dhcp改为static（修改）
-ONBOOT=yes #开机启用本配置，一般在最后一行（修改）
+BOOTPROTO=static #dhcp改为static
+ONBOOT=yes #开机启用本配置
 IPADDR=192.168.50.121
 GATEWAY=192.168.50.1
 NETMASK=255.255.255.0
@@ -45,13 +47,8 @@ NETMASK=255.255.255.0
 IPADDR=10.0.241.41
 NETMASK=255.255.255.0
 PREFIX=24
-```
 
-### 生效ip
-```shell
-service network restart 
-
-#或者
+# 生效ip
 systemctl restart network
 ```
 
@@ -62,8 +59,6 @@ hostnamectl --static set-hostname n121
 ```
 
 ### 设置DNS
-vi /etc/resolv.conf
-nameserver 8.8.8.8
 ```shell
 echo "nameserver 114.114.114.114 " >> /etc/resolv.conf
 ```
@@ -129,18 +124,20 @@ sed -ri 's#(SELINUX=).*#\1disabled#' /etc/selinux/config
 
 ### scp免密码传文件
 ```shell
-sshpass -p 'dana.com2018' scp `ls` root@192.168.50.4:/mnt/data/55_gitlab_backup/
-
--o StrictHostKeyChecking=no 避免第一次登录出现公钥检查。
-https://blog.csdn.net/typa01_kk/article/details/42239553
-gitlab定时更新并传到指定节点
+sshpass -p 'yourpasswd' scp `ls` root@192.168.50.100:/home/
+# -o StrictHostKeyChecking=no 避免第一次登录出现公钥检查。
+# 参考：https://blog.csdn.net/typa01_kk/article/details/42239553
+# gitlab定时更新并传到指定节点
 cd /gitlab-data/gitlab_back \
 && rm -rf `ls -t |grep backup.tar|tail -n +3` \
-&& sshpass -p 'dana.com2018' scp `ls` root@192.168.50.4:/mnt/data/55_gitlab_backup/
+&& sshpass -p 'yourpasswd' scp `ls` root@192.168.50.100:/mnt/backup/
 ```
 
 ### ssh互通
-生成公钥和私钥：`ssh-keygen -t rsa -f ~/.ssh/id_rsa -N ''`
+生成公钥和私钥：
+```bash
+ssh-keygen -t rsa -f ~/.ssh/id_rsa -N ''
+```
 
 将公钥拷贝到44节点上实现互通 （其实就是把公钥放到远端~/.ssh/authorized_keys中）
 ```shell
@@ -179,20 +176,19 @@ ls -lR |grep "^d"|wc -l
 ```
 
 如统计/home/han目录(包含子目录)下的所有js文件则：
-```ls -lR /home/han|grep js|wc -l 或 ls -l "/home/han"|grep "js"|wc -l
+```bash
+ls -lR /home/han|grep js|wc -l 或 ls -l "/home/han"|grep "js"|wc -l
 ```
 
 ### yum下载离线 RPM 包及其所有依赖
 ```shell
 yum install --downloaddir=/tmp/whj/ --downloadonly glibc-devel.i686
---downloadonly只下载不安装
---downloaddir下载的rpm包的存放路径
-yum reinstall -y --downloadonly --downloaddir=/tmp/rpmpkg/neovim neovim  //重新安装，并指定路径
+# --downloadonly只下载不安装
+# --downloaddir下载的rpm包的存放路径
+yum reinstall -y --downloadonly --downloaddir=/tmp/rpmpkg/neovim neovim  #重新安装，并指定路径
 
-通过这种方法，可以把绝大部分需要安装的rpm包保存下来.将所需rpm包拷贝到目的主机，文件目录下执行
+# 通过这种方法，可以把绝大部分需要安装的rpm包保存下来.将所需rpm包拷贝到目的主机，文件目录下执行安装
 rpm -ivhU *  --nodeps --force
-
-命令即可实现服务安装。
 ```
 ### 小技巧
 执行命令自动输入yes：
@@ -218,7 +214,7 @@ yum install glances -y
 
 查看系统版本：
 ```
-cat /etc/*release
+cat /etc/os-release
 ```
 查看系统所有服务：
 ```
