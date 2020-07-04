@@ -16,7 +16,7 @@ hugo
 # 进入生成的文件夹
 cd public/
 
-git init
+# git init
 git add .
 git commit -m 'deploy'
 
