@@ -1,15 +1,13 @@
 ---
-title: "K8s之pod篇：yaml文件"
+title: "K8s之pod篇-yaml文件"
 date: 2020-08-09T10:23:40+08:00
-draft: true
+draft: false
+tags:
+    - k8s
+    - pod
+categories:
+    - k8s
 ---
-
-
-
-
-YAML 基础
--------
-
 它的基本语法规则如下：
 
 *   大小写敏感
