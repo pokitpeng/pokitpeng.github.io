@@ -48,7 +48,7 @@ theme = "LoveIt"
     pre = ""
     post = ""
     name = "关于"
-    url = "/about/"
+    url = "/posts/about/"
     title = ""
     weight = 4
 
