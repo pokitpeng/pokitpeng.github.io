@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# 常用命令：
+# hugo serve 调试
+# hugo serve -D 显示草稿
+# hugo new posts/...
+
 # 确保脚本抛出遇到的错误
 # set -e
 
