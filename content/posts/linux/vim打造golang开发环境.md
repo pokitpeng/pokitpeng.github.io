@@ -1,7 +1,7 @@
 ---
 title: "Vim打造golang开发环境"
 date: 2020-08-20T22:59:29+08:00
-draft: true
+draft: false
 tags:
     - golang
     - vim
