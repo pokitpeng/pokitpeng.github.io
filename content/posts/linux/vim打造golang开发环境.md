@@ -8,8 +8,6 @@ tags:
 categories: 
     - vim
 ---
-<!-- 参考：https://www.mrsong.me/2019/12/29/nvim/ -->
-
 ## 1. 前言
 之前一直使用jetbrains家族的各个IDE,用起来也非常的方便，前几天刚好激活码也过期了，懒得找激活，就想趁着这股劲就想把vim搞起来，其实也试过目前挺火的 vacode 但是使用起来 总是感觉差点什么，常用快捷键也和goland的变化太大，又得重新去记快捷键，有点学习成本还麻烦，既然学习那为什么不学vim呢？学习成本越大的，往往后面收益越大，而且vim 的很多快捷键和 shell，git下的快捷键是通用的。网上也从未停止过vim与其他编辑器或IDE的讨论,例如 最早的eclipse 和 vim 那个更强大，后来的sublime和vim的比较等等，这两年vscode又火了，都拿来和vim来作比较，没准过个几年某乎又会出现 xxx编辑器和vim那个更强大！所以学会学好使用vim还是很有必要的。好多资深大佬也都强烈推荐学习，毕竟都是过来人。
 
@@ -66,6 +64,24 @@ Reload .vimrc and `:PlugInstall` to install plugins，其他常用命名：
 "==============================================================================
 " vim 基础配置 
 "==============================================================================
+" leader按键
+let mapleader = "\<space>"
+" 检测文件类型
+filetype on
+" 针对不同的文件类型采用不同的缩进格式
+filetype indent on
+" 允许插件
+filetype plugin on
+" 启动自动补全
+filetype plugin indent on
+
+
+" 在上下移动光标时，光标的上方或下方至少会保留显示的行数
+set scrolloff=7
+
+" 切换paste模式
+set pastetoggle=<F3>
+
 "显示行号
 set number
 
@@ -101,10 +117,54 @@ set softtabstop=4
 "自动缩进所使用的空白长度指示
 set shiftwidth=4
 set expandtab
+
+"==============================================================================
+" other config 
+"==============================================================================
+" vimrc文件修改之后自动加载, windows
+autocmd! bufwritepost _vimrc source %
+" vimrc文件修改之后自动加载, linux
+autocmd! bufwritepost .vimrc source %
+
+" 自动补全配置
+" 让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
+set completeopt=longest,menu
+
+" 增强模式中的命令行自动完成操作
+set wildmenu
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc,*.class
+
+" 离开插入模式后自动关闭预览窗口
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+" 回车即选中当前项
+inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
+
+" In the quickfix window, <CR> is used to jump to the error under the
+" cursor, so undefine the mapping there.
+autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
+" quickfix window  s/v to open in split window,  ,gd/,jd => quickfix window => open it
+autocmd BufReadPost quickfix nnoremap <buffer> v <C-w><Enter><C-w>L
+autocmd BufReadPost quickfix nnoremap <buffer> s <C-w><Enter><C-w>K
+
+" command-line window
+autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
+
+
+" 上下左右键的行为 会显示其他信息
+inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
+inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
+inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
+inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
+
+" 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
 ```
 ### 3.2. 插件配置
-#### 3.2.1. nerdtree
-一个老牌的目录管理插件
+#### 3.2.1. 目录管理
 ```vim
 Plug 'scrooloose/nerdtree'
 
@@ -128,22 +188,17 @@ P        跳到根结点
 p        跳到父结点
 q        关闭 NerdTree 窗口
 ```
-#### 3.2.2. airline
-状态栏美化
+#### 3.2.2. 状态栏美化
+
 ```vim
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 ```
-#### 3.2.3. vim-startify
-开屏美化插件
-
-vim开屏页美化插件，可以记录最近编辑的文件，使用对应数字编号就可以快速打开文件，使用起来非常方便。
-
+#### 3.2.3. 开屏美化
 ```vim
 Plug 'mhinz/vim-startify'
 ```
-#### 3.2.4. vim-go
-vim-go 提供了大量的功能
+#### 3.2.4. go语言必备
 ```vim
 Plug 'fatih/vim-go'
 ```
@@ -175,7 +230,8 @@ augroup END
 这里参考vim-go 作者的vim配置，vim-go-tutorial，配置非常精简，非常值得借鉴学习。配置完成之后就可以使用vim愉快的编写go代码了。
 用的比较多的，gd 跳转到代码定义 < C-i > < C-o > 后退/前进，保存代码就会自动格式化。其他的使用方法看文档就行。
 
-#### 3.2.5. coc.nvim
+#### 3.2.5. 代码补全
+
 依赖环境：nodejs
 ```
 curl -sL install-node.now.sh/lts | bash
@@ -183,44 +239,15 @@ curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
 ```
 代码补全插件
 ```vim
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 ```
-coc.nvim 使用 :CocConfig 打开配置文件，默认路径 `~/.config/nvim/coc-settings.json` ,这里只介绍golang的配置，配置文件添加:
-```json
-{
-    "languageserver": {
-        "golang": {
-            "command": "gopls",
-            "rootPatterns": ["go.mod"],
-            "trace.server": "verbose",
-            "filetypes": ["go"]
-        }
-    },
-    "suggest.noselect": false,
-    "coc.preferences.diagnostic.displayByAle": true,
-    "suggest.floatEnable": true
-}
-```
-init.vim 添加配置，也可不配置不常用到：
-```vim
-" Remap keys for gotos
-" nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gm <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+安装补全插件
 
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
 ```
-正确配置之后，就可以使用代码补全了 例如我们输入 fmt. 就会提示fmt包中的方法，默认选择第一个，使用< C-n > < C-p > 上下选车，回车选择，nvim下可以使用悬浮窗功能。
-小问题可以用改命令解决: `call coc#util#install()`
+CocInstall coc-go coc-json coc-snippets coc-yaml
+```
+
+
 
 ## 4. 最终配置
 `~/.config/nvim/init.vim`
@@ -476,21 +503,4 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-```
-
-`~/.config/nvim/coc-settings.json`
-```json
-{
-    "languageserver": {
-        "golang": {
-            "command": "gopls",
-            "rootPatterns": ["go.mod"],
-            "trace.server": "verbose",
-            "filetypes": ["go"]
-        }
-    },
-    "suggest.noselect": false,
-    "coc.preferences.diagnostic.displayByAle": true,
-    "suggest.floatEnable": true
-}
 ```
