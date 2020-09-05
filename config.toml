@@ -144,6 +144,14 @@ theme = "LoveIt"
     highlightTag = "em"
     #  是否在搜索索引中使用基于 baseURL 的绝对路径
     absoluteURL = false
+  [params.page]
+    # 是否在文章页面显示原始 Markdown 文档链接
+    linkToMarkdown = true
+    [params.page.code]
+      # 是否显示代码块的复制按钮
+      copy = true
+      # 默认展开显示的代码行数
+      maxShownLines = 100
 
 # 用于输出 Markdown 格式文档的设置
 [mediaTypes]
