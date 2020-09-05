@@ -119,7 +119,7 @@ systemctl enable docker
 docker version
 ```
 
-此处最好再配置以下docker镜像源和cgroup信息
+此处最好再配置一下docker镜像源和cgroup信息
 
 ```bash
 sudo mkdir -p /etc/docker
@@ -207,7 +207,7 @@ kubectl describe node n66
 删除taint
 
 ```bash
-kubectl taint n66 pokit node-role.kubernetes.io/master-
+kubectl taint node n66 node-role.kubernetes.io/master-
 ```
 
 再次查看
@@ -254,7 +254,7 @@ scheduler
 kubectl get cs
 # connect refuse
 
-vi /etc/kubernetes/manifests/kube-apiserver.yaml
+vi /etc/kubernetes/manifests/kube-controller-manager.yaml
 vi /etc/kubernetes/manifests/kube-scheduler.yaml
 
 #注释 --port=0  即可
