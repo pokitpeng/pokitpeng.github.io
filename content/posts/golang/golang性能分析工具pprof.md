@@ -52,7 +52,7 @@ func main(){
 
 查看当前总览：访问 `http://$IP:$PORT/debug/pprof`
 
-![](golang性能分析工具pprof.assets/5aeImdMN7xTyWAD.png)
+![](https://i.loli.net/2020/09/11/5aeImdMN7xTyWAD.png)
 
 ```
 cpu（CPU Profiling）: /debug/pprof/profile，默认进行 30s 的 CPU Profiling，得到一个分析用的 profile 文件
@@ -69,7 +69,7 @@ threadcreate：/debug/pprof/threadcreate，查看创建新 OS 线程的堆栈跟
 go tool pprof -http=:8081 http://$IP:$PORT/debug/pprof/heap
 ```
 
-![](golang性能分析工具pprof.assets/fPMgmJXVB4AkhNH.png)
+![](https://i.loli.net/2020/09/11/fPMgmJXVB4AkhNH.png)
 
 里面包含程序内存分析的 dot 格式的图、火焰图、top 列表、source 列表等。
 
