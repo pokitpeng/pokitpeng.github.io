@@ -68,7 +68,6 @@ threadcreate：/debug/pprof/threadcreate，查看创建新 OS 线程的堆栈跟
 ```bash
 go tool pprof -http=:8081 http://$IP:$PORT/debug/pprof/heap
 ```
-
 ![](https://i.loli.net/2020/09/11/fPMgmJXVB4AkhNH.png)
 
 里面包含程序内存分析的 dot 格式的图、火焰图、top 列表、source 列表等。

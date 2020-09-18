@@ -136,7 +136,7 @@ sudo systemctl restart docker
 ### 3.2. 安装kubelet，kubectl，kubeadm
 
 ```bash
-yum install -y kubelet-1.19.0 kubeadm-1.19.0 kubectl-1.19.0
+version=1.19.2;yum install -y kubelet-${version} kubeadm-${version} kubectl-${version}
 
 systemctl start kubelet
 systemctl enable kubelet
@@ -147,7 +147,7 @@ systemctl enable kubelet
 > apiserver-advertise-address: 本机网卡ip
 
 ```bash
-kubeadm init --kubernetes-version=1.19.0 --apiserver-advertise-address=192.168.50.66 --image-repository registry.aliyuncs.com/google_containers
+kubeadm init --kubernetes-version=${version} --apiserver-advertise-address=192.168.50.66 --image-repository registry.aliyuncs.com/google_containers
 
 # 可选参数
 --pod-network-cidr=10.244.0.0/16
