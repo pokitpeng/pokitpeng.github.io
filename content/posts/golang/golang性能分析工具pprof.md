@@ -66,7 +66,11 @@ threadcreate：/debug/pprof/threadcreate，查看创建新 OS 线程的堆栈跟
 我这里使用终端工具对分析结果进行图形化展示
 
 ```bash
+# 内存分析
 go tool pprof -http=:8081 http://$IP:$PORT/debug/pprof/heap
+
+# cpu分析
+go tool pprof -http=:8081 http://$IP:$PORT/debug/pprof/profile
 ```
 ![](https://i.loli.net/2020/09/11/fPMgmJXVB4AkhNH.png)
 
