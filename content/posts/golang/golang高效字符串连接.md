@@ -3,15 +3,15 @@ title: "Golang高效字符串连接"
 date: 2020-08-05T17:37:25+08:00
 draft: false
 tags:
-    - 
+    - golang
 categories: 
-    - 
+    - golang
 ---
 > 字符串拼接在日常开发中是很常见的需求，而且有多种选择，今天我们就来研究研究哪种性能最好。
 
 拼接方式有以下几种：
 
-- +
+- `+`
 - fmt.Sprintf
 - strings.Join
 - bytes.Buffer
