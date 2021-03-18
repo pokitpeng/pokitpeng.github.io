@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/pokitpeng.github.io\/posts\/k8s\/k8s%E9%83%A8%E7%BD%B2\/"
-        },"genre": "posts","keywords": "k8s","wordcount":  1073 ,
+        },"genre": "posts","keywords": "k8s","wordcount":  1255 ,
         "url": "https:\/\/pokitpeng.github.io\/posts\/k8s\/k8s%E9%83%A8%E7%BD%B2\/","datePublished": "2020-09-05T09:07:40+08:00","dateModified": "2020-09-05T09:07:40+08:00","publisher": {
             "@type": "Organization",
             "name": "Pokit Peng"},"author": {
@@ -104,7 +104,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">K8S部署</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="https://pokitpeng.github.io/about/" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Pokit Peng</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/k8s/"><i class="far fa-folder fa-fw"></i>k8s</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-09-05">2020-09-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1073 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-09-05">2020-09-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1255 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -141,8 +141,10 @@
     <li><a href="#4-问题及解决方案">4. 问题及解决方案</a>
       <ul>
         <li><a href="#41-connect-refuse">4.1. connect refuse</a></li>
+        <li><a href="#42-证书">4.2. 证书</a></li>
       </ul>
     </li>
+    <li><a href="#5-卸载">5. 卸载</a></li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><blockquote>
@@ -315,6 +317,42 @@ vi /etc/kubernetes/manifests/kube-controller-manager.yaml
 vi /etc/kubernetes/manifests/kube-scheduler.yaml
 
 <span class="c1">#注释 --port=0  即可</span>
+</code></pre></div><h3 id="42-证书">4.2. 证书</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 查看证书有效时间</span>
+kubeadm alpha certs check-expiration
+
+<span class="c1"># 方法一：升级集群自动轮换证书</span>
+kubeadm upgrade apply --certificate-renewal v1.19.9
+
+<span class="c1"># 方法二：使用 kubeadm 手动生成并替换证书</span>
+<span class="c1"># Step 1): Backup old certs and kubeconfigs</span>
+mkdir /etc/kubernetes.bak
+cp -r /etc/kubernetes/pki/ /etc/kubernetes.bak
+cp /etc/kubernetes/*.conf /etc/kubernetes.bak
+
+<span class="c1"># Step 2): Renew all certs</span>
+kubeadm alpha certs renew all --config kubeadm.yaml
+<span class="c1"># Step 3): Renew all kubeconfigs</span>
+kubeadm alpha kubeconfig user --client-name<span class="o">=</span>admin
+kubeadm alpha kubeconfig user --org system:masters --client-name kubernetes-admin  &gt; /etc/kubernetes/admin.conf
+kubeadm alpha kubeconfig user --client-name system:kube-controller-manager &gt; /etc/kubernetes/controller-manager.conf
+kubeadm alpha kubeconfig user --org system:nodes --client-name system:node:<span class="k">$(</span>hostname<span class="k">)</span> &gt; /etc/kubernetes/kubelet.conf
+kubeadm alpha kubeconfig user --client-name system:kube-scheduler &gt; /etc/kubernetes/scheduler.conf
+
+<span class="c1"># Another way to renew kubeconfigs</span>
+<span class="c1"># kubeadm init phase kubeconfig all --config kubeadm.yaml</span>
+
+<span class="c1"># Step 4): Copy certs/kubeconfigs and restart Kubernetes services</span>
+</code></pre></div><blockquote>
+<p>参考： <a href="https://feisky.gitbooks.io/kubernetes/content/practice/certificate-rotation.html" target="_blank" rel="noopener noreffer">证书轮换</a></p>
+</blockquote>
+<h2 id="5-卸载">5. 卸载</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubeadm reset -f
+<span class="nv">version</span><span class="o">=</span><span class="k">$(</span>kubectl get no<span class="p">|</span>grep master<span class="p">|</span>awk <span class="s1">&#39;{print $5}&#39;</span><span class="p">|</span>sed <span class="s1">&#39;s/v//&#39;</span><span class="k">)</span>
+yum -y remove <span class="se">\
+</span><span class="se"></span>kubeadm-<span class="si">${</span><span class="nv">version</span><span class="si">}</span> <span class="se">\
+</span><span class="se"></span>kubectl-<span class="si">${</span><span class="nv">version</span><span class="si">}</span> <span class="se">\
+</span><span class="se"></span>kubelet-<span class="si">${</span><span class="nv">version</span><span class="si">}</span>
 </code></pre></div></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">

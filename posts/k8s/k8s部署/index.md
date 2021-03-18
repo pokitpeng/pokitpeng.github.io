@@ -258,4 +258,45 @@ vi /etc/kubernetes/manifests/kube-scheduler.yaml
 #注释 --port=0  即可
 ```
 
+### 4.2. 证书
+
+```bash
+# 查看证书有效时间
+kubeadm alpha certs check-expiration
+
+# 方法一：升级集群自动轮换证书
+kubeadm upgrade apply --certificate-renewal v1.19.9
+
+# 方法二：使用 kubeadm 手动生成并替换证书
+# Step 1): Backup old certs and kubeconfigs
+mkdir /etc/kubernetes.bak
+cp -r /etc/kubernetes/pki/ /etc/kubernetes.bak
+cp /etc/kubernetes/*.conf /etc/kubernetes.bak
+
+# Step 2): Renew all certs
+kubeadm alpha certs renew all --config kubeadm.yaml
+# Step 3): Renew all kubeconfigs
+kubeadm alpha kubeconfig user --client-name=admin
+kubeadm alpha kubeconfig user --org system:masters --client-name kubernetes-admin  > /etc/kubernetes/admin.conf
+kubeadm alpha kubeconfig user --client-name system:kube-controller-manager > /etc/kubernetes/controller-manager.conf
+kubeadm alpha kubeconfig user --org system:nodes --client-name system:node:$(hostname) > /etc/kubernetes/kubelet.conf
+kubeadm alpha kubeconfig user --client-name system:kube-scheduler > /etc/kubernetes/scheduler.conf
+
+# Another way to renew kubeconfigs
+# kubeadm init phase kubeconfig all --config kubeadm.yaml
+
+# Step 4): Copy certs/kubeconfigs and restart Kubernetes services
+```
+> 参考： [证书轮换](https://feisky.gitbooks.io/kubernetes/content/practice/certificate-rotation.html)
+
+## 5. 卸载
+```bash
+kubeadm reset -f
+version=$(kubectl get no|grep master|awk '{print $5}'|sed 's/v//')
+yum -y remove \
+kubeadm-${version} \
+kubectl-${version} \
+kubelet-${version}
+```
+
 
