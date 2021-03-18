@@ -305,4 +305,3 @@ kubectl-${version} \
 kubelet-${version}
 ```
 
-
