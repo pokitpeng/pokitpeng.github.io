@@ -11,6 +11,9 @@
 # 确保脚本抛出遇到的错误
 # set -e
 
+git config --local user.name "pokitpeng"
+git config --local user.email "ahpp1001@163.com"
+
 # src分支更新
 git add .
 
