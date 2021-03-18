@@ -110,7 +110,8 @@ EOF
 > 技巧：使用`yum list --showduplicates xxx`命令查看需要安装的软件版本
 
 ```bash
-yum install -y docker-ce-19.03.12-3.el7 
+yum list --showduplicates docker-ce
+yum install -y docker-ce-20.10.5-3.el7
 # 这里也可不指定版本号，安装最新版
 
 # 此处最好再配置一下docker镜像源和cgroup信息
@@ -132,7 +133,8 @@ docker version
 ### 3.2. 安装kubelet，kubectl，kubeadm
 
 ```bash
-version=1.19.2;yum install -y kubelet-${version} kubeadm-${version} kubectl-${version}
+yum list --showduplicates kubelet
+version=1.19.8;yum install -y kubelet-${version} kubeadm-${version} kubectl-${version}
 
 systemctl enable kubelet
 ```
@@ -141,11 +143,18 @@ systemctl enable kubelet
 
 > apiserver-advertise-address: 本机网卡ip
 
-```bash
-kubeadm init --kubernetes-version=${version} --apiserver-advertise-address=192.168.50.66 --image-repository registry.aliyuncs.com/google_containers
 
-# 可选参数
---pod-network-cidr=10.244.0.0/16
+
+```bash
+# 查看ip：
+ip address show |grep global|grep -v inet6|awk -F '[/ ]' '{print $6}'
+
+ip="192.168.50.66"
+kubeadm init \
+--kubernetes-version=${version} \
+--apiserver-advertise-address=${ip} \
+--image-repository registry.aliyuncs.com/google_containers \
+--pod-network-cidr=10.244.0.0/16 # 可选参数
 ```
 
 ### 3.4. 保存配置文件
@@ -244,9 +253,7 @@ kubectl get all --all-namespaces
 
 ### 4.1. connect refuse
 
-apiserver
-
-scheduler
+`apiserver`和`scheduler`健康状态：`connect refuse`
 
 ```bash
 kubectl get cs

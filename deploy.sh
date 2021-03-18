@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# 安装
+# go get github.com/gohugoio/hugo@v0.69.0
+
 # 常用命令：
 # hugo serve 调试
 # hugo serve -D 显示草稿
