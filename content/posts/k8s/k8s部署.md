@@ -113,15 +113,7 @@ EOF
 yum install -y docker-ce-19.03.12-3.el7 
 # 这里也可不指定版本号，安装最新版
 
-systemctl start docker
-systemctl enable docker 
-
-docker version
-```
-
-此处最好再配置一下docker镜像源和cgroup信息
-
-```bash
+# 此处最好再配置一下docker镜像源和cgroup信息
 sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <<-'EOF'
 {
@@ -130,7 +122,11 @@ sudo tee /etc/docker/daemon.json <<-'EOF'
 }
 EOF
 sudo systemctl daemon-reload
-sudo systemctl restart docker
+systemctl start docker
+systemctl enable docker 
+systemctl status docker 
+
+docker version
 ```
 
 ### 3.2. 安装kubelet，kubectl，kubeadm
@@ -138,7 +134,6 @@ sudo systemctl restart docker
 ```bash
 version=1.19.2;yum install -y kubelet-${version} kubeadm-${version} kubectl-${version}
 
-systemctl start kubelet
 systemctl enable kubelet
 ```
 
@@ -159,6 +154,9 @@ kubeadm init --kubernetes-version=${version} --apiserver-advertise-address=192.1
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# 查看状态
+kubectl get node
 
 # 该文件是添加集群的认证文件
 kubeadm join 192.168.50.66:6443 --token f5tpkb.s2afvo0ucr39w2vv \
