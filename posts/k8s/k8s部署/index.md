@@ -29,7 +29,13 @@ chronyc sources
 该命令是幂等的
 
 ```bash
-grep "192.168.50.66 n66" /etc/hosts && sed -ir "s/.*n66$/192.168.50.66\ n66/g" /etc/hosts || echo "192.168.50.66 n66" >> /etc/hosts
+# 查看ip
+ip=$(ip address show |grep global|grep -v inet6|awk -F '[/ ]' '{print $6}'|grep 192.168)
+echo ${ip}
+
+grep "${ip} $(hostname)" /etc/hosts \
+&& sed -ir "s/.*\$(hostname)$/${ip}\ \$(hostname)/g" /etc/hosts \
+|| echo "${ip} $(hostname)" >> /etc/hosts
 ```
 
 ### 2.3. 关闭防火墙、selinux和swap
@@ -140,9 +146,9 @@ systemctl enable kubelet
 
 ```bash
 # 查看ip：
-ip address show |grep global|grep -v inet6|awk -F '[/ ]' '{print $6}'
+ip=$(ip address show |grep global|grep -v inet6|awk -F '[/ ]' '{print $6}'|grep 192.168)
+echo ${ip}
 
-ip="192.168.50.66"
 kubeadm init \
 --kubernetes-version=${version} \
 --apiserver-advertise-address=${ip} \
