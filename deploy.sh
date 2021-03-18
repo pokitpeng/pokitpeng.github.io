@@ -36,7 +36,7 @@ git add .
 git commit -m 'deploy'
 
 git remote add origin https://github.com/pokitpeng/pokitpeng.github.io.git
-# git pull
+# git push
 git push --force origin HEAD:master
 
 cd -
