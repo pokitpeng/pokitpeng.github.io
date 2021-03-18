@@ -28,6 +28,10 @@ hugo
 cd public/
 
 git init
+
+git config --local user.name "pokitpeng"
+git config --local user.email "ahpp1001@163.com"
+
 git add .
 git commit -m 'deploy'
 
