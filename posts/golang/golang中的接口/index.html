@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Golang中的接口 - Pokit Blog</title><meta name="Description" content=""><meta property="og:title" content="Golang中的接口" />
+<meta property="og:description" content="接口介绍 现实中的接口 现实生活中手机、相机、U 盘都可以和电脑的USB接口建立连接。我们不需要关注 usb 卡槽 大小是否一样，因为所有的 USB 接口都是按照统" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pokitpeng.github.io/posts/golang/golang%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3/" />
+<meta property="og:image" content="https://pokitpeng.github.io"/>
+<meta property="article:published_time" content="2020-07-26T10:43:54+08:00" />
+<meta property="article:modified_time" content="2020-07-26T10:43:54+08:00" /><meta property="og:site_name" content="Pokit Blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://pokitpeng.github.io"/>
+
+<meta name="twitter:title" content="Golang中的接口"/>
+<meta name="twitter:description" content="接口介绍 现实中的接口 现实生活中手机、相机、U 盘都可以和电脑的USB接口建立连接。我们不需要关注 usb 卡槽 大小是否一样，因为所有的 USB 接口都是按照统"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/image/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://pokitpeng.github.io/posts/golang/golang%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3/" /><link rel="prev" href="https://pokitpeng.github.io/posts/linux/ansiable/" /><link rel="next" href="https://pokitpeng.github.io/posts/golang/golang%E9%AB%98%E6%95%88%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%9E%E6%8E%A5/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Golang中的接口",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/pokitpeng.github.io\/posts\/golang\/golang%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3\/"
+        },"genre": "posts","keywords": "golang","wordcount":  1944 ,
+        "url": "https:\/\/pokitpeng.github.io\/posts\/golang\/golang%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3\/","datePublished": "2020-07-26T10:43:54+08:00","dateModified": "2020-07-26T10:43:54+08:00","publisher": {
+            "@type": "Organization",
+            "name": "Pokit Peng"},"author": {
+                "@type": "Person",
+                "name": "Pokit Peng"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Pokit Blog">Pokit Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/posts/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Pokit Blog">Pokit Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/posts/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Golang中的接口</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://pokitpeng.github.io/about/" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Pokit Peng</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/golang/"><i class="far fa-folder fa-fw"></i>golang</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-07-26">2020-07-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1944 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#接口介绍">接口介绍</a>
+      <ul>
+        <li><a href="#现实中的接口">现实中的接口</a></li>
+        <li><a href="#golang中的接口">Golang中的接口</a></li>
+      </ul>
+    </li>
+    <li><a href="#golang接口定义">Golang接口定义</a></li>
+    <li><a href="#空接口">空接口</a>
+      <ul>
+        <li><a href="#空接口作为函数的参数">空接口作为函数的参数</a></li>
+        <li><a href="#map-的值实现空接口">map 的值实现空接口</a></li>
+        <li><a href="#切片实现空接口">切片实现空接口</a></li>
+      </ul>
+    </li>
+    <li><a href="#类型空接口作为函数的参数断言">类型空接口作为函数的参数断言</a></li>
+    <li><a href="#结构体值接收者和指针接收者实现接口的区别">结构体值接收者和指针接收者实现接口的区别</a></li>
+    <li><a href="#一个结构体实现多个接口">一个结构体实现多个接口</a></li>
+    <li><a href="#接口嵌套">接口嵌套</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="接口介绍">接口介绍</h2>
+<h3 id="现实中的接口">现实中的接口</h3>
+<p>现实生活中手机、相机、U 盘都可以和电脑的<code>USB</code>接口建立连接。我们不需要关注 usb 卡槽 大小是否一样，因为所有的 USB 接口都是按照统一的标准来设计的。</p>
+<h3 id="golang中的接口">Golang中的接口</h3>
+<p>Golang 中的接口是一种抽象数据类型，Golang 中接口定义了对象的行为规范，只定义规范 不实现。接口中定义的规范由具体的对象来实现。通俗的讲接口就一个标准，它是对一个对象的行为和规范进行约定，约定实现接口的对象必 须得按照接口的规范。</p>
+<h2 id="golang接口定义">Golang接口定义</h2>
+<p>在 Golang 中接口（interface）是一种类型，一种抽象的类型。接口（interface）是一组 函数 method 的集合，Golang 中的接口不能包含任何变量。</p>
+<p>在 Golang 中接口中的所有方法都没有方法体，接口定义了一个对象的行为规范，只定 义规范不实现。接口体现了程序设计的多态和<code>高内聚</code>,<code>低耦合</code>的思想。</p>
+<p>Golang 中的接口也是一种数据类型，不需要显示实现。只需要一个变量含有接口类型 中的所有方法，那么这个变量就实现了这个接口。</p>
+<p>Golang 中每个接口由数个方法组成，接口的定义格式如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">接口名</span> <span class="kd">interface</span><span class="p">{</span> 
+    <span class="nx">方法名</span> <span class="mi">1</span><span class="p">(</span> <span class="nx">参数列表</span> <span class="mi">1</span> <span class="p">)</span> <span class="nx">返回值列表</span> <span class="mi">1</span> 
+    <span class="nx">方法名</span> <span class="mi">2</span><span class="p">(</span> <span class="nx">参数列表</span> <span class="mi">2</span> <span class="p">)</span> <span class="nx">返回值列表</span> <span class="mi">2</span> 
+    <span class="err">…</span> 
+<span class="p">}</span>
+</code></pre></div><p>其中：</p>
+<ul>
+<li><strong>接口名</strong>：使用 type 将接口定义为自定义的类型名。Go 语言的接口在命名时，一般会在 单词后面添加 <code>er</code>，如有写操作的接口叫<code>Writer</code>，有字符串功能的接口叫<code>Stringer</code>等。接 口名最好要能突出该接口的类型含义。</li>
+<li><strong>方法名</strong>：当方法名首字母是大写且这个接口类型名首字母也是大写时，这个方法可以被 接口所在的包（package）之外的代码访问。</li>
+<li><strong>参数列表、返回值列表</strong>：参数列表和返回值列表中的<code>参数变量名</code>可以省略。</li>
+</ul>
+<p>示例1：定义一个<code>Usber</code>接口让<code>Phone</code>和<code>Mouse</code>结构体实现这个接口</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="c1">//Usber usb接口
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Usber</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nf">GetName</span><span class="p">()</span> <span class="kt">string</span>
+	<span class="nf">PullIn</span><span class="p">()</span>
+	<span class="nf">PullOut</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1">//Phone 手机结构体
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Phone</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">//手机类实现usb接口
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Phone</span><span class="p">)</span> <span class="nf">GetName</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Phone</span><span class="p">)</span> <span class="nf">PullIn</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 插入\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Phone</span><span class="p">)</span> <span class="nf">PullOut</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 拔出\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">//Mouse 鼠标结构体
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Mouse</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">//鼠标类实现usb接口
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Mouse</span><span class="p">)</span> <span class="nf">GetName</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Name</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Mouse</span><span class="p">)</span> <span class="nf">PullIn</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 插入\n&#34;</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Mouse</span><span class="p">)</span> <span class="nf">PullOut</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 拔出\n&#34;</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">usb</span> <span class="nx">Usber</span>
+
+	<span class="nx">xiaomi</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Phone</span><span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;小米手机&#34;</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="nx">usb</span> <span class="p">=</span> <span class="nx">xiaomi</span>
+	<span class="nx">usb</span><span class="p">.</span><span class="nf">PullIn</span><span class="p">()</span>
+	<span class="nx">usb</span><span class="p">.</span><span class="nf">PullOut</span><span class="p">()</span>
+
+	<span class="nx">luoji</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Mouse</span><span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;罗技鼠标&#34;</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="nx">usb</span> <span class="p">=</span> <span class="nx">luoji</span>
+	<span class="nx">usb</span><span class="p">.</span><span class="nf">PullIn</span><span class="p">()</span>
+	<span class="nx">usb</span><span class="p">.</span><span class="nf">PullOut</span><span class="p">()</span>
+<span class="p">}</span>
+
+</code></pre></div><p>示例2：<code>Computer </code>结构体中的 <code>Work </code>方法必须传入一个 Usb 的接口</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="c1">//Usber usb接口
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Usber</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nf">GetName</span><span class="p">()</span> <span class="kt">string</span>
+	<span class="nf">PullIn</span><span class="p">()</span>
+	<span class="nf">PullOut</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1">//Phone 手机结构体
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Phone</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">//手机类实现usb接口
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Phone</span><span class="p">)</span> <span class="nf">GetName</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Phone</span><span class="p">)</span> <span class="nf">PullIn</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 插入\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Phone</span><span class="p">)</span> <span class="nf">PullOut</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 拔出\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">//Mouse 鼠标结构体
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Mouse</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">//鼠标类实现usb接口
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Mouse</span><span class="p">)</span> <span class="nf">GetName</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Name</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Mouse</span><span class="p">)</span> <span class="nf">PullIn</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 插入\n&#34;</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Mouse</span><span class="p">)</span> <span class="nf">PullOut</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 拔出\n&#34;</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">//Computer 电脑结构体
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Computer</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">//Worker 方法传入一个usb接口
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">Computer</span><span class="p">)</span> <span class="nf">Worker</span><span class="p">(</span><span class="nx">usb</span> <span class="nx">Usber</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">usb</span><span class="p">.</span><span class="nf">PullIn</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 拷贝文件到 %v\n&#34;</span><span class="p">,</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">usb</span><span class="p">.</span><span class="nf">GetName</span><span class="p">())</span>
+	<span class="nx">usb</span><span class="p">.</span><span class="nf">PullOut</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">usb</span> <span class="nx">Usber</span>
+
+	<span class="nx">xiaomi</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Phone</span><span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;小米手机&#34;</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="nx">usb</span> <span class="p">=</span> <span class="nx">xiaomi</span>
+	<span class="nx">usb</span><span class="p">.</span><span class="nf">PullIn</span><span class="p">()</span>
+	<span class="nx">usb</span><span class="p">.</span><span class="nf">PullOut</span><span class="p">()</span>
+
+	<span class="nx">luoji</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Mouse</span><span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;罗技鼠标&#34;</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="nx">usb</span> <span class="p">=</span> <span class="nx">luoji</span>
+	<span class="nx">usb</span><span class="p">.</span><span class="nf">PullIn</span><span class="p">()</span>
+	<span class="nx">usb</span><span class="p">.</span><span class="nf">PullOut</span><span class="p">()</span>
+
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;========&#34;</span><span class="p">)</span>
+
+	<span class="nx">apple</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Computer</span><span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;苹果电脑&#34;</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="nx">apple</span><span class="p">.</span><span class="nf">Worker</span><span class="p">(</span><span class="nx">xiaomi</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></div><h2 id="空接口">空接口</h2>
+<p>Golang 中的接口可以不定义任何方法，没有定义任何方法的接口就是空接口。空接口表示 没有任何约束，因此任何类型变量都可以实现空接口。 空接口在实际项目中用的是非常多的，用空接口可以表示<code>任意数据类型</code>。</p>
+<h3 id="空接口作为函数的参数">空接口作为函数的参数</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">show</span><span class="p">(</span><span class="nx">a</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;type:%T value:%v\n&#34;</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="map-的值实现空接口">map 的值实现空接口</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="nx">m</span><span class="p">[</span><span class="s">&#34;name&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;tom&#34;</span>
+<span class="nx">m</span><span class="p">[</span><span class="s">&#34;age&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">20</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="c1">// map[age:20 name:tom]
+</span></code></pre></div><h3 id="切片实现空接口">切片实现空接口</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"> <span class="kd">var</span> <span class="nx">s</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{}</span>
+<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="s">&#34;tom&#34;</span><span class="p">)</span>
+<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">123</span><span class="p">)</span>
+<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="c1">// [tom 123 true]
+</span></code></pre></div><h2 id="类型空接口作为函数的参数断言">类型空接口作为函数的参数断言</h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">x</span><span class="p">.(</span><span class="nx">T</span><span class="p">)</span>
+</code></pre></div><p><code>x</code>必须为<code>interface{}</code>类型的变量， <code>T</code>表示断言 <code>x</code> 可能是的类型，返回一个布尔值</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">AssetType</span><span class="p">(</span><span class="nx">x</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">{</span>
+	<span class="k">switch</span> <span class="nx">v</span> <span class="o">:=</span> <span class="nx">x</span><span class="p">.(</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="kt">string</span><span class="p">:</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;x is a string，value is %v\n&#34;</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+	<span class="k">case</span> <span class="kt">int</span><span class="p">:</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;x is a int is %v\n&#34;</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+	<span class="k">case</span> <span class="kt">bool</span><span class="p">:</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;x is a bool is %v\n&#34;</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+	<span class="k">default</span><span class="p">:</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;unsupport type！&#34;</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p><strong>关于接口需要注意的是</strong>：只有当有<code>两个或两个以上的具体类型必须以相同的方式进行处理</code>时 才需要定义接口。不要为了接口而写接口，那样只会增加不必要的抽象，导致不必要的运行 时损耗。</p>
+<h2 id="结构体值接收者和指针接收者实现接口的区别">结构体值接收者和指针接收者实现接口的区别</h2>
+<p><strong>值接收者</strong>：如果结构体中的方法是值接收者，那么实例化后的结构体值类型和结构体指针类型都可以赋 值给接口变量</p>
+<p><strong>指针接收者</strong>：如果结构体中的方法是指针接收者，那么实例化后结构体指针类型都可以赋值给接口变量， 结构体值类型没法赋值给接口变量。</p>
+<h2 id="一个结构体实现多个接口">一个结构体实现多个接口</h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">type</span> <span class="nx">A</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nf">SetName</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">B</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nf">GetName</span><span class="p">()</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Human</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">h</span> <span class="o">*</span><span class="nx">Human</span><span class="p">)</span> <span class="nf">SetName</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">h</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nx">name</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">h</span> <span class="o">*</span><span class="nx">Human</span><span class="p">)</span> <span class="nf">GetName</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">h</span><span class="p">.</span><span class="nx">Name</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">tom</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Human</span><span class="p">{}</span>
+	
+	<span class="c1">// Human既实现了A接口也实现了B接口
+</span><span class="c1"></span>	
+	<span class="kd">var</span> <span class="nx">a</span> <span class="nx">A</span> <span class="p">=</span> <span class="nx">tom</span>
+	<span class="nx">a</span><span class="p">.</span><span class="nf">SetName</span><span class="p">(</span><span class="s">&#34;tom&#34;</span><span class="p">)</span>
+
+	<span class="kd">var</span> <span class="nx">b</span> <span class="nx">B</span> <span class="p">=</span> <span class="nx">tom</span>
+	<span class="nx">result</span> <span class="o">:=</span> <span class="nx">b</span><span class="p">.</span><span class="nf">GetName</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></div><h2 id="接口嵌套">接口嵌套</h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">type</span> <span class="nx">Sayer</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nf">Say</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Mover</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nf">Move</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Animal</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nx">Sayer</span>
+	<span class="nx">Mover</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Cat</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">// 实现了Sayer和Mover接口，即实现了Animal接口
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">Cat</span><span class="p">)</span> <span class="nf">Say</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 会喵喵叫\n&#34;</span><span class="p">,</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">Cat</span><span class="p">)</span> <span class="nf">Move</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v 会跳起来\n&#34;</span><span class="p">,</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">tom</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Cat</span><span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;tom&#34;</span><span class="p">,</span>
+	<span class="p">}</span>
+	
+	<span class="kd">var</span> <span class="nx">x</span> <span class="nx">Animal</span> <span class="p">=</span> <span class="nx">tom</span>
+	<span class="nx">x</span><span class="p">.</span><span class="nf">Say</span><span class="p">()</span>
+	<span class="nx">x</span><span class="p">.</span><span class="nf">Move</span><span class="p">()</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-07-26</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/posts/golang/golang%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang/">golang</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/linux/ansiable/" class="prev" rel="prev" title="Ansiable自动化运维"><i class="fas fa-angle-left fa-fw"></i>Ansiable自动化运维</a>
+            <a href="/posts/golang/golang%E9%AB%98%E6%95%88%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%9E%E6%8E%A5/" class="next" rel="next" title="Golang高效字符串连接">Golang高效字符串连接<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.69.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://pokitpeng.github.io/about/" target="_blank">Pokit Peng</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

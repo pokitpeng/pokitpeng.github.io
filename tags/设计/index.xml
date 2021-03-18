@@ -1,0 +1,21 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>设计 - 标签 - Pokit Blog</title>
+        <link>https://pokitpeng.github.io/tags/%E8%AE%BE%E8%AE%A1/</link>
+        <description>设计 - 标签 - Pokit Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 05 Jul 2020 17:33:11 &#43;0800</lastBuildDate><atom:link href="https://pokitpeng.github.io/tags/%E8%AE%BE%E8%AE%A1/" rel="self" type="application/rss+xml" /><item>
+    <title>Golang设计模式之工厂模式</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/</link>
+    <pubDate>Sun, 05 Jul 2020 17:33:11 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/</guid>
+    <description><![CDATA[概述 目的：使一个类的实例化延迟到其子类, 定义一个用于创建对象的接口, 让子类决定将哪一个类实例化 工厂模式就是让子类实现工厂接口，返回一个抽象的]]></description>
+</item><item>
+    <title>Golang设计模式之建造者模式</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/</link>
+    <pubDate>Sat, 04 Jul 2020 18:51:43 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/</guid>
+    <description><![CDATA[概述 wiki: Builder Pattern 是一种设计模式，又名：建造模式，是一种对象构建模式。它可以将复杂对象的建造过程抽象出来（抽象类别），使这个抽象过程的不同实现方法可]]></description>
+</item></channel>
+</rss>

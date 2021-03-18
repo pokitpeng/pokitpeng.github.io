@@ -1,0 +1,35 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>k8s - 分类 - Pokit Blog</title>
+        <link>https://pokitpeng.github.io/categories/k8s/</link>
+        <description>k8s - 分类 - Pokit Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 05 Sep 2020 09:07:40 &#43;0800</lastBuildDate><atom:link href="https://pokitpeng.github.io/categories/k8s/" rel="self" type="application/rss+xml" /><item>
+    <title>K8S部署</title>
+    <link>https://pokitpeng.github.io/posts/k8s/k8s%E9%83%A8%E7%BD%B2/</link>
+    <pubDate>Sat, 05 Sep 2020 09:07:40 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/k8s/k8s%E9%83%A8%E7%BD%B2/</guid>
+    <description><![CDATA[前言：目前公司部署k8s全部都是使用二进制方式安装，我们自己写了一套工具来实现快速部署，优点是出了什么问题都在我们掌控之中，可以随时修复，里]]></description>
+</item><item>
+    <title>K8s之pod篇 健康检查</title>
+    <link>https://pokitpeng.github.io/posts/k8s/k8s%E4%B9%8Bpod%E7%AF%87-%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/</link>
+    <pubDate>Tue, 11 Aug 2020 15:35:41 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/k8s/k8s%E4%B9%8Bpod%E7%AF%87-%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/</guid>
+    <description><![CDATA[官方文档：https://kubernetes.io/zh/docs/tasks/configure-pod-container/confi]]></description>
+</item><item>
+    <title>K8s之pod篇 静态pod</title>
+    <link>https://pokitpeng.github.io/posts/k8s/k8s%E4%B9%8Bpod%E7%AF%87-%E9%9D%99%E6%80%81pod/</link>
+    <pubDate>Sun, 09 Aug 2020 11:57:47 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/k8s/k8s%E4%B9%8Bpod%E7%AF%87-%E9%9D%99%E6%80%81pod/</guid>
+    <description><![CDATA[在 Kubernetes 集群中除了我们经常使用到的普通的 Pod 外，还有一种特殊的 Pod，叫做Static Pod，就是我们说的静态 Pod，静态 Pod 有什么特殊的地方呢？ 静]]></description>
+</item><item>
+    <title>K8s之pod篇-yaml文件</title>
+    <link>https://pokitpeng.github.io/posts/k8s/k8s%E4%B9%8Bpod%E7%AF%87-yaml%E6%96%87%E4%BB%B6/</link>
+    <pubDate>Sun, 09 Aug 2020 10:23:40 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/k8s/k8s%E4%B9%8Bpod%E7%AF%87-yaml%E6%96%87%E4%BB%B6/</guid>
+    <description><![CDATA[它的基本语法规则如下： 大小写敏感 使用缩进表示层级关系 缩进时不允许使用 Tab 键，只允许使用空格。 缩进的空格数目不重要，只要相同层级的元素左侧对齐即]]></description>
+</item></channel>
+</rss>

@@ -1,0 +1,77 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>golang - 标签 - Pokit Blog</title>
+        <link>https://pokitpeng.github.io/tags/golang/</link>
+        <description>golang - 标签 - Pokit Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 28 Oct 2020 15:53:43 &#43;0800</lastBuildDate><atom:link href="https://pokitpeng.github.io/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>Golang中slice底层原理理解</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E4%B8%ADslice%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E7%90%86%E8%A7%A3/</link>
+    <pubDate>Wed, 28 Oct 2020 15:53:43 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E4%B8%ADslice%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E7%90%86%E8%A7%A3/</guid>
+    <description><![CDATA[1. 前言 我们知道数组在初始化的时候会声明数组长度，使用的时候难免会有不方便的地方，于是就有了slice，所谓的切片其实就是动态数组，本质上是基]]></description>
+</item><item>
+    <title>Golang内存逃逸分析</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/</link>
+    <pubDate>Tue, 27 Oct 2020 22:25:16 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[题外 好久都没更新博客了，这段时间一直在捣鼓语雀，发现真是个优秀的东西（所见即所得，所得即所想），忍不住想吹一波。。。 我把很多自己积累的知识都]]></description>
+</item><item>
+    <title>Golang性能分析工具pprof</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7pprof/</link>
+    <pubDate>Thu, 10 Sep 2020 13:48:31 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7pprof/</guid>
+    <description><![CDATA[1. 前言 近段时间，发现开发的服务，启动的时候只有30MB左右，但是跑了几天后，居然高达400MB。在业务代码又比较复杂的情况下，琢磨者研究了一]]></description>
+</item><item>
+    <title>Golang中tag使用技巧</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E4%B8%ADtag%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/</link>
+    <pubDate>Sat, 05 Sep 2020 18:06:20 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E4%B8%ADtag%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/</guid>
+    <description><![CDATA[本文将介绍go在使用json序列化过程中的一些常用技巧，以及一些隐蔽的坑 1. 基本序列化 type User struct { Email string Password string } u1 := &amp;User{ Email: &#34;pokit@qq.com&#34;, Password: &#34;123456&#34;, } res, _ := json.Marshal(u1) fmt.Println(string(res)) // output {&#34;Email&#34;:&#34;pokit@qq.com&#34;,&#34;Password&#34;:&#34;123456&#34;} 2. ta]]></description>
+</item><item>
+    <title>Vim打造golang开发环境</title>
+    <link>https://pokitpeng.github.io/posts/linux/vim%E6%89%93%E9%80%A0golang%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</link>
+    <pubDate>Thu, 20 Aug 2020 22:59:29 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/linux/vim%E6%89%93%E9%80%A0golang%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</guid>
+    <description><![CDATA[1. 前言 之前一直使用jetbrains家族的各个IDE,用起来也非常的方便，前几天刚好激活码也过期了，懒得找激活，就想趁着这股劲就想把vim搞]]></description>
+</item><item>
+    <title>Golang命令行解析之flag和pflag</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%A7%A3%E6%9E%90%E4%B9%8Bflag/</link>
+    <pubDate>Mon, 17 Aug 2020 21:59:50 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%A7%A3%E6%9E%90%E4%B9%8Bflag/</guid>
+    <description><![CDATA[简介 在Golang程序中有很多种方法来处理命令行参数，主要有以下三种方案： os.Args：能达到目的但是不太友好 golang标准库flag：]]></description>
+</item><item>
+    <title>Golang高效字符串连接</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E9%AB%98%E6%95%88%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%9E%E6%8E%A5/</link>
+    <pubDate>Wed, 05 Aug 2020 17:37:25 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E9%AB%98%E6%95%88%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%9E%E6%8E%A5/</guid>
+    <description><![CDATA[字符串拼接在日常开发中是很常见的需求，而且有多种选择，今天我们就来研究研究哪种性能最好。 拼接方式有以下几种： + fmt.Sprintf strings.Join bytes.Buffer strings.Builder 直接上代码 package string_join import ( &#34;bytes&#34; &#34;fmt&#34;]]></description>
+</item><item>
+    <title>Golang中的接口</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3/</link>
+    <pubDate>Sun, 26 Jul 2020 10:43:54 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3/</guid>
+    <description><![CDATA[接口介绍 现实中的接口 现实生活中手机、相机、U 盘都可以和电脑的USB接口建立连接。我们不需要关注 usb 卡槽 大小是否一样，因为所有的 USB 接口都是按照统]]></description>
+</item><item>
+    <title>Protobuf初体验</title>
+    <link>https://pokitpeng.github.io/posts/golang/protobuf%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</link>
+    <pubDate>Thu, 16 Jul 2020 11:14:35 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/protobuf%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</guid>
+    <description><![CDATA[Protocol Buffers 简介 protobuf 即 Protocol Buffers，是一种轻便高效的结构化数据存储格式，与语言、平台无关，可扩展可序列化。protobuf 性能和效率大幅度优于 JS]]></description>
+</item><item>
+    <title>Golang设计模式之工厂模式</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/</link>
+    <pubDate>Sun, 05 Jul 2020 17:33:11 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/</guid>
+    <description><![CDATA[概述 目的：使一个类的实例化延迟到其子类, 定义一个用于创建对象的接口, 让子类决定将哪一个类实例化 工厂模式就是让子类实现工厂接口，返回一个抽象的]]></description>
+</item></channel>
+</rss>

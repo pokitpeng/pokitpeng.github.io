@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Golang如何写出gc友好的代码 - Pokit Blog</title><meta name="Description" content=""><meta property="og:title" content="Golang如何写出gc友好的代码" />
+<meta property="og:description" content="1. GO中的GC 常见的垃圾回收方法有引用计数和标记清除，这里简单介绍下go语言中的三色标记法。我们直接看下GC的几个重要阶段： 1.1. 标记开始 - STW 当" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pokitpeng.github.io/posts/golang/golang%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BAgc%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81/" />
+<meta property="og:image" content="https://pokitpeng.github.io"/>
+<meta property="article:published_time" content="2020-10-31T11:59:29+08:00" />
+<meta property="article:modified_time" content="2020-10-31T11:59:29+08:00" /><meta property="og:site_name" content="Pokit Blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://pokitpeng.github.io"/>
+
+<meta name="twitter:title" content="Golang如何写出gc友好的代码"/>
+<meta name="twitter:description" content="1. GO中的GC 常见的垃圾回收方法有引用计数和标记清除，这里简单介绍下go语言中的三色标记法。我们直接看下GC的几个重要阶段： 1.1. 标记开始 - STW 当"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/image/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://pokitpeng.github.io/posts/golang/golang%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BAgc%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81/" /><link rel="prev" href="https://pokitpeng.github.io/posts/golang/golang%E4%B8%ADslice%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E7%90%86%E8%A7%A3/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Golang如何写出gc友好的代码",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/pokitpeng.github.io\/posts\/golang\/golang%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BAgc%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81\/"
+        },"genre": "posts","keywords": "goalng","wordcount":  1330 ,
+        "url": "https:\/\/pokitpeng.github.io\/posts\/golang\/golang%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BAgc%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81\/","datePublished": "2020-10-31T11:59:29+08:00","dateModified": "2020-10-31T11:59:29+08:00","publisher": {
+            "@type": "Organization",
+            "name": "Pokit Peng"},"author": {
+                "@type": "Person",
+                "name": "Pokit Peng"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Pokit Blog">Pokit Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/posts/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Pokit Blog">Pokit Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/posts/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Golang如何写出gc友好的代码</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://pokitpeng.github.io/about/" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Pokit Peng</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/golang/"><i class="far fa-folder fa-fw"></i>golang</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-10-31">2020-10-31</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1330 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-go中的gc">1. GO中的GC</a>
+      <ul>
+        <li><a href="#11-标记开始---stw">1.1. 标记开始 - STW</a></li>
+        <li><a href="#12-标记中---并发">1.2. 标记中 - 并发</a></li>
+        <li><a href="#13-标记结束---stw">1.3. 标记结束 - STW</a></li>
+        <li><a href="#14-并发清除">1.4. 并发清除</a></li>
+        <li><a href="#15-总体过程如下">1.5. 总体过程如下：</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-实践">2. 实践</a>
+      <ul>
+        <li><a href="#21-传值与传指针">2.1. 传值与传指针</a></li>
+        <li><a href="#22-初始化切片大小">2.2. 初始化切片大小</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-结论">3. 结论</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="1-go中的gc">1. GO中的GC</h2>
+<p>常见的垃圾回收方法有引用计数和标记清除，这里简单介绍下go语言中的三色标记法。我们直接看下GC的几个重要阶段：</p>
+<h3 id="11-标记开始---stw">1.1. 标记开始 - STW</h3>
+<p>当回收开始，首先执行的动作是打开写屏障。写屏障的目的是允许回收器在收集过程保持堆上的数据完整性，因为回收器和应用程序的 Goroutine 会并发执行。为了打开写屏障，必须停止应用运行的所有 Goroutine 。这个动作通常非常快，平均在 10~30 微秒之间</p>
+<h3 id="12-标记中---并发">1.2. 标记中 - 并发</h3>
+<p>标记阶段会将大概25%(gcBackgroundUtilization)的P用于标记对象，逐个扫描所有G的堆栈，执行三色标记，在这个过程中，所有新分配的对象都是黑色，被扫描的G会被暂停，扫描完成后恢复，这部分工作叫后台标记(<a href="https://github.com/golang/go/blob/dev.boringcrypto.go1.13/src/runtime/mgc.go#L1817" target="_blank" rel="noopener noreffer">gcBgMarkWorker</a>)。</p>
+<h3 id="13-标记结束---stw">1.3. 标记结束 - STW</h3>
+<p>一旦标记工作完成，下阶段就是标记结束了。到这个阶段，写屏障会被停止，各样的清洁工作会被执行，然后计算好下一次的回收目标。</p>
+<h3 id="14-并发清除">1.4. 并发清除</h3>
+<p>在回收完成之后有另一个叫清除的动作发生。清除是指回收堆内存中，未标记为使用中的值所关联的内存。该动作会在应用程序 Goroutine 尝试分配新值到堆内存时发生。清除的延迟被算到在堆内存中执行分配的成本中，与垃圾回收相关的任何延迟无关。</p>
+<h3 id="15-总体过程如下">1.5. 总体过程如下：</h3>
+<ol>
+<li>起初所有对象都是白色。</li>
+<li>从根出发扫描所有可达对象，标记为灰色，放入待处理队列。</li>
+<li>从队列取出灰色对象，将其引用对象标记为灰色放入队列，自身标记为黑色。</li>
+<li>重复 3，直到灰色对象队列为空。此时白色对象即为垃圾，进行回收。</li>
+</ol>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/2732449449-5c66324354fa8_articlex.gif"
+        data-srcset="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/2732449449-5c66324354fa8_articlex.gif, https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/2732449449-5c66324354fa8_articlex.gif 1.5x, https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/2732449449-5c66324354fa8_articlex.gif 2x"
+        data-sizes="auto"
+        alt="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/2732449449-5c66324354fa8_articlex.gif"
+        title="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/2732449449-5c66324354fa8_articlex.gif" /></p>
+<h2 id="2-实践">2. 实践</h2>
+<h3 id="21-传值与传指针">2.1. 传值与传指针</h3>
+<p>我们根据示例分析</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">gc_friendly</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;testing&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">Num</span> <span class="p">=</span> <span class="mi">1000</span>
+
+<span class="kd">type</span> <span class="nx">BigArray</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Content</span> <span class="p">[</span><span class="mi">10000</span><span class="p">]</span><span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">withValue</span><span class="p">(</span><span class="nx">arr</span> <span class="p">[</span><span class="nx">Num</span><span class="p">]</span><span class="nx">BigArray</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="mi">0</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">withReference</span><span class="p">(</span><span class="nx">arr</span> <span class="o">*</span><span class="p">[</span><span class="nx">Num</span><span class="p">]</span><span class="nx">BigArray</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="mi">0</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">Benchmark_withValue</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">arr</span> <span class="p">[</span><span class="nx">Num</span><span class="p">]</span><span class="nx">BigArray</span>
+
+	<span class="nx">b</span><span class="p">.</span><span class="nf">ResetTimer</span><span class="p">()</span> <span class="c1">// b.ResetTimer是重置计时器，这样可以避免for循环之前的初始化代码的干扰
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nf">withValue</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">b</span><span class="p">.</span><span class="nf">StopTimer</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">Benchmark_withReference</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">arr</span> <span class="p">[</span><span class="nx">Num</span><span class="p">]</span><span class="nx">BigArray</span>
+
+	<span class="nx">b</span><span class="p">.</span><span class="nf">ResetTimer</span><span class="p">()</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nf">withReference</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">arr</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">b</span><span class="p">.</span><span class="nf">StopTimer</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div><p>执行测试：<code>go test -bench=.</code>
+执行结果：</p>
+<pre><code>goos: windows
+goarch: amd64
+Benchmark_withValue-6                103          12064520 ns/op
+Benchmark_withReference-6       1000000000               0.258 ns/op
+PASS
+</code></pre><p>可以看到性能差距非常大。另外我们可以打开GC日志，进行具体分析。例如：</p>
+<pre><code>GOGEBUG=gctrace=1 go test -bench=.
+GOGEBUG=gctrace=1 go run main.go
+</code></pre><p>除此之外，还可以使用<code>go tool trace</code>进行分析，首先生成trace文件</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">go <span class="nb">test</span> -bench<span class="o">=</span>Benchmark_withValue -trace<span class="o">=</span>trace_val.out
+go <span class="nb">test</span> -bench<span class="o">=</span>Benchmark_withReference -trace<span class="o">=</span>trace_ref.out
+</code></pre></div><p>然后生成可视化图标</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">go tool trace trace_val.out
+go tool trace trace_ref.out
+</code></pre></div><p>传值trace结果：
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112238.png"
+        data-srcset="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112238.png, https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112238.png 1.5x, https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112238.png 2x"
+        data-sizes="auto"
+        alt="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112238.png"
+        title="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112238.png" /></p>
+<p>传指针trace结果：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112306.png"
+        data-srcset="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112306.png, https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112306.png 1.5x, https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112306.png 2x"
+        data-sizes="auto"
+        alt="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112306.png"
+        title="https://raw.githubusercontent.com/pokitpeng/picture-bed/master/golang/20201031112306.png" /></p>
+<p>可以看出传指值的gc非常频繁。</p>
+<h3 id="22-初始化切片大小">2.2. 初始化切片大小</h3>
+<p>示例</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">gc_friendly</span>
+
+<span class="kn">import</span> <span class="s">&#34;testing&#34;</span>
+
+<span class="kd">const</span> <span class="nx">Num</span> <span class="p">=</span> <span class="mi">10000</span>
+
+<span class="kd">func</span> <span class="nf">Benchmark_SliceAutoGrow</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">s</span> <span class="p">[]</span><span class="kt">int</span>
+		<span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="p">&lt;</span> <span class="nx">Num</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span> <span class="p">{</span>
+			<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">Benchmark_SliceProperInit</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">s</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">Num</span><span class="p">)</span>
+		<span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="p">&lt;</span> <span class="nx">Num</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span> <span class="p">{</span>
+			<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">Benchmark_SliceBigInit</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">s</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">80000</span><span class="p">)</span>
+		<span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="p">&lt;</span> <span class="nx">Num</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span> <span class="p">{</span>
+			<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>测试运行：<code>go test -bench=^Benchmark_Slice</code>
+运行结果：</p>
+<pre><code>goos: windows
+goarch: amd64
+Benchmark_SliceAutoGrow-6          26917             43721 ns/op
+Benchmark_SliceProperInit-6        97821             12347 ns/op
+Benchmark_SliceBigInit-6           23005             50506 ns/op
+PASS
+</code></pre><p>可以发现，切片初始化太大和太小都会影响内存分配效率。初始化太大，内存占用高，初始化太小，每次执行<code>append</code>函数时，当容量不足就会自动扩容，此时会拷贝出一个全新的切片，影响程序性能。</p>
+<h2 id="3-结论">3. 结论</h2>
+<ol>
+<li>当结构体较大时使用指针传递（不是所有的指针传递都比值传递效率高，当结构体较小时，可能会分配到栈中，而指针会分配到堆中，此时值传递效率高于指针传递）</li>
+<li>尽量初始化合适大小的容量</li>
+<li>尽量做到复用内存</li>
+</ol>
+<p><strong>参考</strong></p>
+<p><a href="https://draveness.me/golang/docs/part3-runtime/ch07-memory/golang-garbage-collector/" target="_blank" rel="noopener noreffer">Go 语言垃圾收集器的实现原理 | Go 语言设计与实现 (draveness.me)</a></p>
+<p><a href="https://www.flysnow.org/2017/05/21/go-in-action-go-benchmark-test.html" target="_blank" rel="noopener noreffer">Go语言实战笔记（二十二）| Go 基准测试 | 飞雪无情的博客 (flysnow.org)</a></p>
+<p><a href="https://segmentfault.com/a/1190000018161588" target="_blank" rel="noopener noreffer">(&hellip;) GO GC 垃圾回收机制_golang开发笔记 - SegmentFault 思否</a></p>
+<p><a href="https://wudaijun.com/2020/01/go-gc-keypoint-and-monitor/" target="_blank" rel="noopener noreffer">Golang GC核心要点和度量方法 | wudaijun&rsquo;s blog</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-10-31</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/posts/golang/golang%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BAgc%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/goalng/">goalng</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/golang/golang%E4%B8%ADslice%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E7%90%86%E8%A7%A3/" class="prev" rel="prev" title="Golang中slice底层原理理解"><i class="fas fa-angle-left fa-fw"></i>Golang中slice底层原理理解</a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.69.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://pokitpeng.github.io/about/" target="_blank">Pokit Peng</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

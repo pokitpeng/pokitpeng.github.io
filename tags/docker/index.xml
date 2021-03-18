@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>docker - 标签 - Pokit Blog</title>
+        <link>https://pokitpeng.github.io/tags/docker/</link>
+        <description>docker - 标签 - Pokit Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 13 Jul 2020 13:27:39 &#43;0800</lastBuildDate><atom:link href="https://pokitpeng.github.io/tags/docker/" rel="self" type="application/rss+xml" /><item>
+    <title>减小docker镜像体积</title>
+    <link>https://pokitpeng.github.io/posts/docker/%E5%87%8F%E5%B0%8Fdocker%E9%95%9C%E5%83%8F/</link>
+    <pubDate>Mon, 13 Jul 2020 13:27:39 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/docker/%E5%87%8F%E5%B0%8Fdocker%E9%95%9C%E5%83%8F/</guid>
+    <description><![CDATA[之前在构建docker镜像的时候，发现自己构建的镜像体积非常大，有时候我只需要用一个几MB的可执行文件，但是构建出来的镜像居然能达到GB级别]]></description>
+</item></channel>
+</rss>

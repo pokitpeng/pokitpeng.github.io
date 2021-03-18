@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>RPC - 标签 - Pokit Blog</title>
+        <link>https://pokitpeng.github.io/tags/rpc/</link>
+        <description>RPC - 标签 - Pokit Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 16 Jul 2020 11:14:35 &#43;0800</lastBuildDate><atom:link href="https://pokitpeng.github.io/tags/rpc/" rel="self" type="application/rss+xml" /><item>
+    <title>Protobuf初体验</title>
+    <link>https://pokitpeng.github.io/posts/golang/protobuf%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</link>
+    <pubDate>Thu, 16 Jul 2020 11:14:35 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/protobuf%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</guid>
+    <description><![CDATA[Protocol Buffers 简介 protobuf 即 Protocol Buffers，是一种轻便高效的结构化数据存储格式，与语言、平台无关，可扩展可序列化。protobuf 性能和效率大幅度优于 JS]]></description>
+</item></channel>
+</rss>

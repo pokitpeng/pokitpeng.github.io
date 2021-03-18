@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>goalng - 标签 - Pokit Blog</title>
+        <link>https://pokitpeng.github.io/tags/goalng/</link>
+        <description>goalng - 标签 - Pokit Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 31 Oct 2020 11:59:29 &#43;0800</lastBuildDate><atom:link href="https://pokitpeng.github.io/tags/goalng/" rel="self" type="application/rss+xml" /><item>
+    <title>Golang如何写出gc友好的代码</title>
+    <link>https://pokitpeng.github.io/posts/golang/golang%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BAgc%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81/</link>
+    <pubDate>Sat, 31 Oct 2020 11:59:29 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://pokitpeng.github.io/posts/golang/golang%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BAgc%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81/</guid>
+    <description><![CDATA[1. GO中的GC 常见的垃圾回收方法有引用计数和标记清除，这里简单介绍下go语言中的三色标记法。我们直接看下GC的几个重要阶段： 1.1. 标记开始 - STW 当]]></description>
+</item></channel>
+</rss>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>linux - Pokit Blog</title><meta name="Description" content=""><meta property="og:title" content="linux" />
+<meta property="og:description" content="Centos常用操作 代理 # 设置当前终端代理 export ALL_PROXY=http://192.168.30.106:1080 # 取消代理 unset ALL_RPOXY # git添加代理 git config --global http.proxy http://192.168.30.106:1080 git config --global https.proxy http://192.168.30.106:1080 # 检查 git config --list # 取消 git config --global --unset http.proxy git config --global --unset https.proxy # 只对" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pokitpeng.github.io/posts/linux/centos/" />
+<meta property="og:image" content="https://pokitpeng.github.io"/>
+<meta property="article:published_time" content="2020-07-03T16:53:19+08:00" />
+<meta property="article:modified_time" content="2020-07-03T16:53:19+08:00" /><meta property="og:site_name" content="Pokit Blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://pokitpeng.github.io"/>
+
+<meta name="twitter:title" content="linux"/>
+<meta name="twitter:description" content="Centos常用操作 代理 # 设置当前终端代理 export ALL_PROXY=http://192.168.30.106:1080 # 取消代理 unset ALL_RPOXY # git添加代理 git config --global http.proxy http://192.168.30.106:1080 git config --global https.proxy http://192.168.30.106:1080 # 检查 git config --list # 取消 git config --global --unset http.proxy git config --global --unset https.proxy # 只对"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/image/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://pokitpeng.github.io/posts/linux/centos/" /><link rel="prev" href="https://pokitpeng.github.io/posts/about/" /><link rel="next" href="https://pokitpeng.github.io/posts/golang/golang%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "linux",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/pokitpeng.github.io\/posts\/linux\/centos\/"
+        },"genre": "posts","wordcount":  1305 ,
+        "url": "https:\/\/pokitpeng.github.io\/posts\/linux\/centos\/","datePublished": "2020-07-03T16:53:19+08:00","dateModified": "2020-07-03T16:53:19+08:00","publisher": {
+            "@type": "Organization",
+            "name": "Pokit Peng"},"author": {
+                "@type": "Person",
+                "name": "Pokit Peng"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Pokit Blog">Pokit Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/posts/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Pokit Blog">Pokit Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/posts/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">linux</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://pokitpeng.github.io/about/" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Pokit Peng</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-07-03">2020-07-03</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1305 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#代理">代理</a></li>
+        <li><a href="#永久关闭防火墙">永久关闭防火墙</a></li>
+        <li><a href="#更改ip">更改ip</a></li>
+        <li><a href="#hostname">hostname</a></li>
+        <li><a href="#设置dns">设置DNS</a></li>
+        <li><a href="#时间修改">时间修改</a></li>
+        <li><a href="#网络时间同步">网络时间同步</a></li>
+        <li><a href="#selinux">SELinux</a></li>
+        <li><a href="#scp免密码传文件">scp免密码传文件</a></li>
+        <li><a href="#ssh互通">ssh互通</a></li>
+        <li><a href="#添加用户和组">添加用户和组</a></li>
+        <li><a href="#文件统计">文件统计</a></li>
+        <li><a href="#yum下载离线-rpm-包及其所有依赖">yum下载离线 RPM 包及其所有依赖</a></li>
+        <li><a href="#小技巧">小技巧</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="centos常用操作">Centos常用操作</h1>
+<h3 id="代理">代理</h3>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># 设置当前终端代理</span>
+<span class="nb">export</span> <span class="nv">ALL_PROXY</span><span class="o">=</span>http://192.168.30.106:1080
+<span class="c1"># 取消代理</span>
+<span class="nb">unset</span> ALL_RPOXY
+
+<span class="c1"># git添加代理</span>
+git config --global http.proxy http://192.168.30.106:1080
+git config --global https.proxy http://192.168.30.106:1080 
+<span class="c1"># 检查</span>
+git config --list
+<span class="c1"># 取消</span>
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+
+<span class="c1"># 只对github.com进行代理</span>
+git config --global http.https://github.com.proxy http://127.0.0.1:1080
+<span class="c1">#取消代理</span>
+git config --global --unset http.https://github.com.proxy
+</code></pre></div><h3 id="永久关闭防火墙">永久关闭防火墙</h3>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">systemctl stop firewalld.service <span class="o">&amp;&amp;</span> systemctl disable firewalld.service
+</code></pre></div><h3 id="更改ip">更改ip</h3>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">vi /etc/sysconfig/network-scripts/ifcfg-*
+<span class="c1"># 修改内容：</span>
+<span class="nv">BOOTPROTO</span><span class="o">=</span>static <span class="c1">#dhcp改为static</span>
+<span class="nv">ONBOOT</span><span class="o">=</span>yes <span class="c1">#开机启用本配置</span>
+<span class="nv">IPADDR</span><span class="o">=</span>192.168.50.121
+<span class="nv">GATEWAY</span><span class="o">=</span>192.168.50.1
+<span class="nv">NETMASK</span><span class="o">=</span>255.255.255.0
+
+<span class="c1"># 万兆网卡：</span>
+<span class="nv">IPADDR</span><span class="o">=</span>10.0.241.41
+<span class="nv">NETMASK</span><span class="o">=</span>255.255.255.0
+<span class="nv">PREFIX</span><span class="o">=</span><span class="m">24</span>
+
+<span class="c1"># 生效ip</span>
+systemctl restart network
+</code></pre></div><h3 id="hostname">hostname</h3>
+<p>hostname设置：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">hostnamectl --static set-hostname n121
+</code></pre></div><h3 id="设置dns">设置DNS</h3>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">&#34;nameserver 114.114.114.114 &#34;</span> &gt;&gt; /etc/resolv.conf
+</code></pre></div><h3 id="时间修改">时间修改</h3>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">date -s <span class="s1">&#39;2020-01-21 14:54:00&#39;</span>
+</code></pre></div><h3 id="网络时间同步">网络时间同步</h3>
+<ol>
+<li>chrony</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">yum install -y chrony
+/etc/chrony.conf
+
+systemctl <span class="nb">enable</span> chronyd
+systemctl start chronyd
+<span class="c1"># 检查时间同步</span>
+chronyc sources
+</code></pre></div><ol start="2">
+<li>rdate命令来同步时间</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">yum -y install rdate <span class="o">&amp;&amp;</span> rdate -s time-b.nist.gov 
+</code></pre></div><ol start="3">
+<li>安装ntpdate工具：</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">yum -y install ntp ntpdate
+
+设置系统时间与网络时间同步
+ntpdate cn.pool.ntp.org
+
+ntpdate ntp.aliyun.com     <span class="c1">#阿里云镜像</span>
+
+yum -y install ntp ntpdate <span class="o">&amp;&amp;</span> ntpdate ntp.aliyun.com
+
+<span class="c1">#如果the NTP socket is in use, exiting</span>
+service ntpd stop <span class="o">&amp;&amp;</span> ntpdate ntp.aliyun.com   
+
+<span class="c1">#修改时区：</span>
+cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+timedatectl set-timezone Asia/Shanghai
+timedatectl status
+<span class="c1">#选择时区：</span>
+tzselect
+</code></pre></div><h3 id="selinux">SELinux</h3>
+<pre><code>#查看SELinux状态
+/usr/sbin/sestatus -v 或者 getenforce
+#临时关闭（不用重启机器）
+setenforce 0
+#永久关闭，修改配置文件需要重启机器
+#修改/etc/selinux/config 文件
+#将SELINUX=enforcing改为SELINUX=disabled
+sed -ri 's#(SELINUX=).*#\1disabled#' /etc/selinux/config
+
+#重启机器即可
+</code></pre><h3 id="scp免密码传文件">scp免密码传文件</h3>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">sshpass -p <span class="s1">&#39;yourpasswd&#39;</span> scp <span class="sb">`</span>ls<span class="sb">`</span> root@192.168.50.100:/home/
+<span class="c1"># -o StrictHostKeyChecking=no 避免第一次登录出现公钥检查。</span>
+<span class="c1"># 参考：https://blog.csdn.net/typa01_kk/article/details/42239553</span>
+<span class="c1"># gitlab定时更新并传到指定节点</span>
+<span class="nb">cd</span> /gitlab-data/gitlab_back <span class="se">\
+</span><span class="se"></span><span class="o">&amp;&amp;</span> rm -rf <span class="sb">`</span>ls -t <span class="p">|</span>grep backup.tar<span class="p">|</span>tail -n +3<span class="sb">`</span> <span class="se">\
+</span><span class="se"></span><span class="o">&amp;&amp;</span> sshpass -p <span class="s1">&#39;yourpasswd&#39;</span> scp <span class="sb">`</span>ls<span class="sb">`</span> root@192.168.50.100:/mnt/backup/
+</code></pre></div><h3 id="ssh互通">ssh互通</h3>
+<p>生成公钥和私钥：</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">ssh-keygen -t rsa -f ~/.ssh/id_rsa -N <span class="s1">&#39;&#39;</span>
+</code></pre></div><p>将公钥拷贝到44节点上实现互通 （其实就是把公钥放到远端~/.ssh/authorized_keys中）</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">ssh-copy-id -i ~/.ssh/id_rsa.pub -o <span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no root@192.168.3.44
+</code></pre></div><h3 id="添加用户和组">添加用户和组</h3>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">groupadd elsearch
+
+useradd elsearch -g elsearch -p elasticsearch
+
+chown -R elsearch:elsearch elasticsearch
+
+su elsearch
+</code></pre></div><h3 id="文件统计">文件统计</h3>
+<p>统计当前路径下文件的个数：</p>
+<pre><code>ls -l |grep &quot;^-&quot;|wc -l
+</code></pre><p>统计当前路径下文件夹的个数：</p>
+<pre><code>ls -l |grep &quot;^d&quot;|wc -l
+</code></pre><p>统计当前路径下文件的个数（包括子文件夹夹里面的）：</p>
+<pre><code>ls -lR|grep &quot;^-&quot;|wc -l
+</code></pre><p>统计当前路径下文件夹的个数（包括子文件夹夹里面的）：</p>
+<pre><code>ls -lR |grep &quot;^d&quot;|wc -l
+</code></pre><p>如统计/home/han目录(包含子目录)下的所有js文件则：</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">ls -lR /home/han<span class="p">|</span>grep js<span class="p">|</span>wc -l 或 ls -l <span class="s2">&#34;/home/han&#34;</span><span class="p">|</span>grep <span class="s2">&#34;js&#34;</span><span class="p">|</span>wc -l
+</code></pre></div><h3 id="yum下载离线-rpm-包及其所有依赖">yum下载离线 RPM 包及其所有依赖</h3>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">yum install --downloaddir<span class="o">=</span>/tmp/whj/ --downloadonly glibc-devel.i686
+<span class="c1"># --downloadonly只下载不安装</span>
+<span class="c1"># --downloaddir下载的rpm包的存放路径</span>
+yum reinstall -y --downloadonly --downloaddir<span class="o">=</span>/tmp/rpmpkg/neovim neovim  <span class="c1">#重新安装，并指定路径</span>
+
+<span class="c1"># 通过这种方法，可以把绝大部分需要安装的rpm包保存下来.将所需rpm包拷贝到目的主机，文件目录下执行安装</span>
+rpm -ivhU *  --nodeps --force
+</code></pre></div><h3 id="小技巧">小技巧</h3>
+<p>执行命令自动输入yes：</p>
+<pre><code>echo yes | yum install wget
+</code></pre><p>安装保存日志</p>
+<pre><code>./install.sh | tee log.txt
+</code></pre><p>分割文件:</p>
+<pre><code>split -b 100M nginx.log -d -a 3 split_file
+#把nginx.log文件分割成100MB大小 , 新文件已split开头,2位长度的数字结尾
+</code></pre><p>glances监控安装</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">yum install epel* -y
+yum install python-pip python-devel -y
+yum install glances -y
+</code></pre></div><p>查看系统版本：</p>
+<pre><code>cat /etc/os-release
+</code></pre><p>查看系统所有服务：</p>
+<pre><code>1、service --status-all
+2、chkconfig --list
+3、进入init.d目录查看 （/etc/init.d/leopardservices status）
+4、netstat -lntp
+5、ps aux
+6、ntsysv （其中*号表示开机启动。空格选择或者取消，tab选择退出，如果想让某个服务开机启动，可以使用chkconfig mysql on）
+</code></pre><p>查看指定目录大小：</p>
+<pre><code>du -sh /root
+</code></pre><p>杀进程：</p>
+<pre><code>pkill -f name
+ps -elf |grep -v grep|grep $1|awk '{print $4}'
+</code></pre><p>只保留当前文件夹最近的2个文件</p>
+<pre><code>rm -rf `ls -t |tail -n +3`
+</code></pre></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-07-03</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/posts/linux/centos/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/about/" class="prev" rel="prev" title="关于"><i class="fas fa-angle-left fa-fw"></i>关于</a>
+            <a href="/posts/golang/golang%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/" class="next" rel="next" title="Golang设计模式之建造者模式">Golang设计模式之建造者模式<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.69.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://pokitpeng.github.io/about/" target="_blank">Pokit Peng</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

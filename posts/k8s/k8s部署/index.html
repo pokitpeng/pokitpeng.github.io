@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>K8S部署 - Pokit Blog</title><meta name="Description" content=""><meta property="og:title" content="K8S部署" />
+<meta property="og:description" content="前言：目前公司部署k8s全部都是使用二进制方式安装，我们自己写了一套工具来实现快速部署，优点是出了什么问题都在我们掌控之中，可以随时修复，里" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pokitpeng.github.io/posts/k8s/k8s%E9%83%A8%E7%BD%B2/" />
+<meta property="og:image" content="https://pokitpeng.github.io"/>
+<meta property="article:published_time" content="2020-09-05T09:07:40+08:00" />
+<meta property="article:modified_time" content="2020-09-05T09:07:40+08:00" /><meta property="og:site_name" content="Pokit Blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://pokitpeng.github.io"/>
+
+<meta name="twitter:title" content="K8S部署"/>
+<meta name="twitter:description" content="前言：目前公司部署k8s全部都是使用二进制方式安装，我们自己写了一套工具来实现快速部署，优点是出了什么问题都在我们掌控之中，可以随时修复，里"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/image/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://pokitpeng.github.io/posts/k8s/k8s%E9%83%A8%E7%BD%B2/" /><link rel="prev" href="https://pokitpeng.github.io/posts/linux/vim%E6%89%93%E9%80%A0golang%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" /><link rel="next" href="https://pokitpeng.github.io/posts/golang/golang%E4%B8%ADtag%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "K8S部署",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/pokitpeng.github.io\/posts\/k8s\/k8s%E9%83%A8%E7%BD%B2\/"
+        },"genre": "posts","keywords": "k8s","wordcount":  1073 ,
+        "url": "https:\/\/pokitpeng.github.io\/posts\/k8s\/k8s%E9%83%A8%E7%BD%B2\/","datePublished": "2020-09-05T09:07:40+08:00","dateModified": "2020-09-05T09:07:40+08:00","publisher": {
+            "@type": "Organization",
+            "name": "Pokit Peng"},"author": {
+                "@type": "Person",
+                "name": "Pokit Peng"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Pokit Blog">Pokit Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/posts/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Pokit Blog">Pokit Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/posts/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">K8S部署</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://pokitpeng.github.io/about/" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Pokit Peng</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/k8s/"><i class="far fa-folder fa-fw"></i>k8s</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-09-05">2020-09-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1073 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-环境准备">1. 环境准备</a></li>
+    <li><a href="#2-初始化工作">2. 初始化工作</a>
+      <ul>
+        <li><a href="#21-设置hostname同步时间">2.1. 设置hostname，同步时间</a></li>
+        <li><a href="#22-设置etchosts">2.2. 设置/etc/hosts</a></li>
+        <li><a href="#23-关闭防火墙selinux和swap">2.3. 关闭防火墙、selinux和swap</a></li>
+        <li><a href="#24-配置内核参数">2.4. 配置内核参数</a></li>
+        <li><a href="#25-配置yum源">2.5. 配置yum源</a></li>
+        <li><a href="#26-配置docker源">2.6. 配置docker源</a></li>
+        <li><a href="#27-配置kubernetes源">2.7. 配置Kubernetes源</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-开始部署">3. 开始部署</a>
+      <ul>
+        <li><a href="#31-安装docker">3.1. 安装docker</a></li>
+        <li><a href="#32-安装kubeletkubectlkubeadm">3.2. 安装kubelet，kubectl，kubeadm</a></li>
+        <li><a href="#33-执行初始化">3.3. 执行初始化</a></li>
+        <li><a href="#34-保存配置文件">3.4. 保存配置文件</a></li>
+        <li><a href="#35-token相关">3.5. token相关</a></li>
+        <li><a href="#36-安装网络插件">3.6. 安装网络插件</a></li>
+        <li><a href="#37-开启单机模式">3.7. 开启单机模式</a></li>
+        <li><a href="#38-创建一个测试程序">3.8. 创建一个测试程序</a></li>
+        <li><a href="#39-查看状态">3.9. 查看状态</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-问题及解决方案">4. 问题及解决方案</a>
+      <ul>
+        <li><a href="#41-connect-refuse">4.1. connect refuse</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>前言：目前公司部署k8s全部都是使用二进制方式安装，我们自己写了一套工具来实现快速部署，优点是出了什么问题都在我们掌控之中，可以随时修复，里面的各种配置，证书都可以自己生成，缺点就是需要一定的维护成本。早已听闻<code>kubeadm</code>作为k8s官方推荐的部署工具，这里也来尝尝鲜。</p>
+</blockquote>
+<h2 id="1-环境准备">1. 环境准备</h2>
+<ul>
+<li>centos 7.6+</li>
+<li>cpu core 2+</li>
+<li>mem 2GB+</li>
+<li>ip</li>
+</ul>
+<h2 id="2-初始化工作">2. 初始化工作</h2>
+<h3 id="21-设置hostname同步时间">2.1. 设置hostname，同步时间</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">hostnamectl --static set-hostname n66
+
+date -s <span class="s1">&#39;2020-09-04 21:54:00&#39;</span> 
+
+yum install -y chrony
+systemctl <span class="nb">enable</span> chronyd  <span class="o">&amp;&amp;</span> systemctl start chronyd
+chronyc sources
+</code></pre></div><h3 id="22-设置etchosts">2.2. 设置/etc/hosts</h3>
+<p>该命令是幂等的</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">grep <span class="s2">&#34;192.168.50.66 n66&#34;</span> /etc/hosts <span class="o">&amp;&amp;</span> sed -ir <span class="s2">&#34;s/.*n66</span>$<span class="s2">/192.168.50.66\ n66/g&#34;</span> /etc/hosts <span class="o">||</span> <span class="nb">echo</span> <span class="s2">&#34;192.168.50.66 n66&#34;</span> &gt;&gt; /etc/hosts
+</code></pre></div><h3 id="23-关闭防火墙selinux和swap">2.3. 关闭防火墙、selinux和swap</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">systemctl stop firewalld
+
+systemctl disable firewalld
+
+setenforce <span class="m">0</span>
+
+sed -i <span class="s2">&#34;s/^SELINUX=enforcing/SELINUX=disabled/g&#34;</span> /etc/selinux/config
+
+swapoff -a
+
+sed -i <span class="s1">&#39;s/.*swap.*/#&amp;/&#39;</span> /etc/fstab
+</code></pre></div><h3 id="24-配置内核参数">2.4. 配置内核参数</h3>
+<p>将桥接的IPv4流量传递到iptables的链</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">cat &gt; /etc/sysctl.d/k8s.conf <span class="s">&lt;&lt;EOF
+</span><span class="s">net.bridge.bridge-nf-call-ip6tables = 1
+</span><span class="s">net.bridge.bridge-nf-call-iptables = 1
+</span><span class="s">EOF</span>
+
+<span class="c1">#生效</span>
+sysctl --system
+</code></pre></div><h3 id="25-配置yum源">2.5. 配置yum源</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">yum install -y wget
+
+mkdir /etc/yum.repos.d/bak <span class="o">&amp;&amp;</span> mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/bak
+
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.cloud.tencent.com/repo/centos7_base.repo
+
+wget -O /etc/yum.repos.d/epel.repo http://mirrors.cloud.tencent.com/repo/epel-7.repo
+
+yum clean all <span class="o">&amp;&amp;</span> yum makecache
+</code></pre></div><h3 id="26-配置docker源">2.6. 配置docker源</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo 
+</code></pre></div><h3 id="27-配置kubernetes源">2.7. 配置Kubernetes源</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">cat <span class="s">&lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
+</span><span class="s">[kubernetes]
+</span><span class="s">name=Kubernetes
+</span><span class="s">baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+</span><span class="s">enabled=1
+</span><span class="s">gpgcheck=1
+</span><span class="s">repo_gpgcheck=1
+</span><span class="s">gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+</span><span class="s">EOF</span>
+</code></pre></div><h2 id="3-开始部署">3. 开始部署</h2>
+<h3 id="31-安装docker">3.1. 安装docker</h3>
+<blockquote>
+<p>技巧：使用<code>yum list --showduplicates xxx</code>命令查看需要安装的软件版本</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">yum list --showduplicates docker-ce
+yum install -y docker-ce-20.10.5-3.el7
+<span class="c1"># 这里也可不指定版本号，安装最新版</span>
+
+<span class="c1"># 此处最好再配置一下docker镜像源和cgroup信息</span>
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <span class="s">&lt;&lt;-&#39;EOF&#39;
+</span><span class="s">{
+</span><span class="s">  &#34;registry-mirrors&#34;: [&#34;https://hxzfq25s.mirror.aliyuncs.com&#34;],
+</span><span class="s">  &#34;exec-opts&#34;: [&#34;native.cgroupdriver=systemd&#34;]
+</span><span class="s">}
+</span><span class="s">EOF</span>
+sudo systemctl daemon-reload
+systemctl start docker
+systemctl <span class="nb">enable</span> docker 
+systemctl status docker 
+
+docker version
+</code></pre></div><h3 id="32-安装kubeletkubectlkubeadm">3.2. 安装kubelet，kubectl，kubeadm</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">yum list --showduplicates kubelet
+<span class="nv">version</span><span class="o">=</span>1.19.8<span class="p">;</span>yum install -y kubelet-<span class="si">${</span><span class="nv">version</span><span class="si">}</span> kubeadm-<span class="si">${</span><span class="nv">version</span><span class="si">}</span> kubectl-<span class="si">${</span><span class="nv">version</span><span class="si">}</span>
+
+systemctl <span class="nb">enable</span> kubelet
+</code></pre></div><h3 id="33-执行初始化">3.3. 执行初始化</h3>
+<blockquote>
+<p>apiserver-advertise-address: 本机网卡ip</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 查看ip：</span>
+ip address show <span class="p">|</span>grep global<span class="p">|</span>grep -v inet6<span class="p">|</span>awk -F <span class="s1">&#39;[/ ]&#39;</span> <span class="s1">&#39;{print $6}&#39;</span>
+
+<span class="nv">ip</span><span class="o">=</span><span class="s2">&#34;192.168.50.66&#34;</span>
+kubeadm init <span class="se">\
+</span><span class="se"></span>--kubernetes-version<span class="o">=</span><span class="si">${</span><span class="nv">version</span><span class="si">}</span> <span class="se">\
+</span><span class="se"></span>--apiserver-advertise-address<span class="o">=</span><span class="si">${</span><span class="nv">ip</span><span class="si">}</span> <span class="se">\
+</span><span class="se"></span>--image-repository registry.aliyuncs.com/google_containers <span class="se">\
+</span><span class="se"></span>--pod-network-cidr<span class="o">=</span>10.244.0.0/16 <span class="c1"># 可选参数</span>
+</code></pre></div><h3 id="34-保存配置文件">3.4. 保存配置文件</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">mkdir -p <span class="nv">$HOME</span>/.kube
+sudo cp -i /etc/kubernetes/admin.conf <span class="nv">$HOME</span>/.kube/config
+sudo chown <span class="k">$(</span>id -u<span class="k">)</span>:<span class="k">$(</span>id -g<span class="k">)</span> <span class="nv">$HOME</span>/.kube/config
+
+<span class="c1"># 查看状态</span>
+kubectl get node
+
+<span class="c1"># 该文件是添加集群的认证文件</span>
+kubeadm join 192.168.50.66:6443 --token f5tpkb.s2afvo0ucr39w2vv <span class="se">\
+</span><span class="se"></span>    --discovery-token-ca-cert-hash sha256:655259c2004973875e2e963adce1b11386db0c65420c6a7687b8887b228ab5c7
+</code></pre></div><h3 id="35-token相关">3.5. token相关</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 查看token</span>
+kubeadm token list
+
+<span class="c1"># 获取ca证书sha256编码hash值</span>
+openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt <span class="p">|</span> openssl rsa -pubin -outform der 2&gt;/dev/null <span class="p">|</span> openssl dgst -sha256 -hex <span class="p">|</span> sed <span class="s1">&#39;s/^.* //&#39;</span>
+
+<span class="c1"># 加入node</span>
+kubeadm join &lt;ip&gt;:6443 --token &lt;token&gt; --discovery-token-ca-cert-hash sha256:&lt;hash_value&gt;
+
+kubeadm token create --print-join-command <span class="c1"># 默认有效期24小时,若想久一些可以结合--ttl参数,设为0则用不过期</span>
+kubeadm token create --ttl <span class="m">0</span> --print-join-command
+</code></pre></div><h3 id="36-安装网络插件">3.6. 安装网络插件</h3>
+<p>以下两个网络插件二选一</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># flannel</span>
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+<span class="c1"># calico 这个貌似稳定点</span>
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+</code></pre></div><h3 id="37-开启单机模式">3.7. 开启单机模式</h3>
+<p>查看当前taint情况</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl describe node n66
+
+<span class="c1"># Taints默认为node-role.kubernetes.io/master:NoSchedule</span>
+<span class="c1"># 表示不允许被调度</span>
+</code></pre></div><p>删除taint</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl taint node n66 node-role.kubernetes.io/master-
+</code></pre></div><p>再次查看</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl describe node n66
+
+<span class="c1"># Taints为&lt;none&gt;</span>
+<span class="c1"># 此时节点可被调度</span>
+
+<span class="c1"># taint有三个值</span>
+<span class="c1"># NoSchedule: 一定不能被调度</span>
+<span class="c1"># PreferNoSchedule: 尽量不要调度</span>
+<span class="c1"># NoExecute: 不仅不会调度, 还会驱逐Node上已有的Pod</span>
+</code></pre></div><p>恢复默认状态</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl taint nodes n66 node-role.kubernetes.io/master<span class="o">=</span>:NoSchedule
+</code></pre></div><h3 id="38-创建一个测试程序">3.8. 创建一个测试程序</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl apply -f https://k8s.io/examples/application/deployment.yaml
+</code></pre></div><h3 id="39-查看状态">3.9. 查看状态</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl get all --all-namespaces
+</code></pre></div><h2 id="4-问题及解决方案">4. 问题及解决方案</h2>
+<h3 id="41-connect-refuse">4.1. connect refuse</h3>
+<p><code>apiserver</code>和<code>scheduler</code>健康状态：<code>connect refuse</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl get cs
+<span class="c1"># connect refuse</span>
+
+vi /etc/kubernetes/manifests/kube-controller-manager.yaml
+vi /etc/kubernetes/manifests/kube-scheduler.yaml
+
+<span class="c1">#注释 --port=0  即可</span>
+</code></pre></div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-09-05</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/posts/k8s/k8s%E9%83%A8%E7%BD%B2/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/k8s/">k8s</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/linux/vim%E6%89%93%E9%80%A0golang%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" class="prev" rel="prev" title="Vim打造golang开发环境"><i class="fas fa-angle-left fa-fw"></i>Vim打造golang开发环境</a>
+            <a href="/posts/golang/golang%E4%B8%ADtag%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/" class="next" rel="next" title="Golang中tag使用技巧">Golang中tag使用技巧<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.69.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://pokitpeng.github.io/about/" target="_blank">Pokit Peng</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

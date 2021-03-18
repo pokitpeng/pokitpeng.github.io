@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Golang中tag使用技巧 - Pokit Blog</title><meta name="Description" content=""><meta property="og:title" content="Golang中tag使用技巧" />
+<meta property="og:description" content="本文将介绍go在使用json序列化过程中的一些常用技巧，以及一些隐蔽的坑 1. 基本序列化 type User struct { Email string Password string } u1 := &amp;User{ Email: &#34;pokit@qq.com&#34;, Password: &#34;123456&#34;, } res, _ := json.Marshal(u1) fmt.Println(string(res)) // output {&#34;Email&#34;:&#34;pokit@qq.com&#34;,&#34;Password&#34;:&#34;123456&#34;} 2. ta" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pokitpeng.github.io/posts/golang/golang%E4%B8%ADtag%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/" />
+<meta property="og:image" content="https://pokitpeng.github.io"/>
+<meta property="article:published_time" content="2020-09-05T18:06:20+08:00" />
+<meta property="article:modified_time" content="2020-09-05T18:06:20+08:00" /><meta property="og:site_name" content="Pokit Blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://pokitpeng.github.io"/>
+
+<meta name="twitter:title" content="Golang中tag使用技巧"/>
+<meta name="twitter:description" content="本文将介绍go在使用json序列化过程中的一些常用技巧，以及一些隐蔽的坑 1. 基本序列化 type User struct { Email string Password string } u1 := &amp;User{ Email: &#34;pokit@qq.com&#34;, Password: &#34;123456&#34;, } res, _ := json.Marshal(u1) fmt.Println(string(res)) // output {&#34;Email&#34;:&#34;pokit@qq.com&#34;,&#34;Password&#34;:&#34;123456&#34;} 2. ta"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/image/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://pokitpeng.github.io/posts/golang/golang%E4%B8%ADtag%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/" /><link rel="prev" href="https://pokitpeng.github.io/posts/k8s/k8s%E9%83%A8%E7%BD%B2/" /><link rel="next" href="https://pokitpeng.github.io/posts/golang/golang%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7pprof/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Golang中tag使用技巧",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/pokitpeng.github.io\/posts\/golang\/golang%E4%B8%ADtag%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7\/"
+        },"genre": "posts","keywords": "golang","wordcount":  1244 ,
+        "url": "https:\/\/pokitpeng.github.io\/posts\/golang\/golang%E4%B8%ADtag%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7\/","datePublished": "2020-09-05T18:06:20+08:00","dateModified": "2020-09-05T18:06:20+08:00","publisher": {
+            "@type": "Organization",
+            "name": "Pokit Peng"},"author": {
+                "@type": "Person",
+                "name": "Pokit Peng"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Pokit Blog">Pokit Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/posts/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Pokit Blog">Pokit Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/posts/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Golang中tag使用技巧</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://pokitpeng.github.io/about/" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Pokit Peng</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/golang/"><i class="far fa-folder fa-fw"></i>golang</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-09-05">2020-09-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1244 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-基本序列化">1. 基本序列化</a></li>
+    <li><a href="#2-tag标签">2. tag标签</a></li>
+    <li><a href="#3-忽略某个字段">3. 忽略某个字段</a></li>
+    <li><a href="#4-忽略空值字段">4. 忽略空值字段</a></li>
+    <li><a href="#5-忽略嵌套结构体空值字段">5. 忽略嵌套结构体空值字段</a></li>
+    <li><a href="#6-不修改原结构体忽略空值字段">6. 不修改原结构体忽略空值字段</a></li>
+    <li><a href="#7-类型转换">7. 类型转换</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>本文将介绍go在使用<code>json</code>序列化过程中的一些常用技巧，以及一些隐蔽的坑</p>
+</blockquote>
+<h2 id="1-基本序列化">1. 基本序列化</h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Email</span>    <span class="kt">string</span>
+	<span class="nx">Password</span> <span class="kt">string</span>
+<span class="p">}</span>
+<span class="nx">u1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
+	<span class="nx">Email</span><span class="p">:</span>    <span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span>
+	<span class="nx">Password</span><span class="p">:</span> <span class="s">&#34;123456&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">res</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">u1</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res</span><span class="p">))</span>
+
+<span class="c1">// output
+</span><span class="c1"></span><span class="p">{</span><span class="s">&#34;Email&#34;</span><span class="p">:</span><span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span><span class="s">&#34;Password&#34;</span><span class="p">:</span><span class="s">&#34;123456&#34;</span><span class="p">}</span>
+</code></pre></div><h2 id="2-tag标签">2. tag标签</h2>
+<p><code>Tag</code>是结构体的元信息，可以在运行的时候通过反射的机制读取出来。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Email</span>    <span class="kt">string</span> <span class="s">`json:&#34;email&#34;`</span>
+	<span class="nx">Password</span> <span class="kt">string</span> <span class="s">`json:&#34;password&#34;`</span>
+<span class="p">}</span>
+<span class="nx">u1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
+	<span class="nx">Email</span><span class="p">:</span>    <span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span>
+	<span class="nx">Password</span><span class="p">:</span> <span class="s">&#34;123456&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">res</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">u1</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res</span><span class="p">))</span>
+
+<span class="c1">// output
+</span><span class="c1"></span><span class="p">{</span><span class="s">&#34;email&#34;</span><span class="p">:</span><span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span><span class="s">&#34;password&#34;</span><span class="p">:</span><span class="s">&#34;123456&#34;</span><span class="p">}</span>
+</code></pre></div><p>上述序列化后的<code>json</code>数据，<code>key</code>是我们先前定义的<code>tag</code>，这是最广泛的一种使用方法。</p>
+<h2 id="3-忽略某个字段">3. 忽略某个字段</h2>
+<p>如果你想在<code>json</code>序列化/反序列化的时候忽略掉结构体中的某个字段，可以按如下方式在tag中添加<code>-</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Email</span>    <span class="kt">string</span> <span class="s">`json:&#34;email&#34;`</span>
+    <span class="c1">// 此处使用-，该字段就会被忽略
+</span><span class="c1"></span>	<span class="nx">Password</span> <span class="kt">string</span> <span class="s">`json:&#34;-&#34;`</span>
+<span class="p">}</span>
+<span class="nx">u1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
+	<span class="nx">Email</span><span class="p">:</span>    <span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span>
+	<span class="nx">Password</span><span class="p">:</span> <span class="s">&#34;123456&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">res</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">u1</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res</span><span class="p">))</span>
+
+<span class="c1">// output
+</span><span class="c1"></span><span class="p">{</span><span class="s">&#34;email&#34;</span><span class="p">:</span><span class="s">&#34;pokit@qq.com&#34;</span><span class="p">}</span>
+</code></pre></div><h2 id="4-忽略空值字段">4. 忽略空值字段</h2>
+<p>当 <code>struct</code> 中的字段没有值时， <code>json.Marshal()</code> 序列化的时候不会忽略这些字段，而是默认输出字段的类型<code>零值</code>，如果想要在序列序列化时忽略这些没有值的字段时，可以在对应字段添加<code>omitempty</code> tag。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Email</span>    <span class="kt">string</span> <span class="s">`json:&#34;email&#34;`</span>
+	<span class="nx">Password</span> <span class="kt">string</span> <span class="s">`json:&#34;password,omitempty&#34;`</span>
+<span class="p">}</span>
+<span class="nx">u1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
+	<span class="nx">Email</span><span class="p">:</span>    <span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">res</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">u1</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res</span><span class="p">))</span>
+
+<span class="c1">// output
+</span><span class="c1"></span><span class="p">{</span><span class="s">&#34;email&#34;</span><span class="p">:</span><span class="s">&#34;pokit@qq.com&#34;</span><span class="p">}</span>
+</code></pre></div><p>可以看到<code>Password</code>并没有传值，序列化的结果就会直接忽略。</p>
+<h2 id="5-忽略嵌套结构体空值字段">5. 忽略嵌套结构体空值字段</h2>
+<p>这里有两个坑，我们根据实例看一下</p>
+<p><strong>坑一</strong>：当嵌套结构体<code>Others</code>没有写tag，内部元素就不会做嵌套处理，所以我们还是老老实实的每个元素都写一下tag。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Others</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Language</span> <span class="kt">string</span> <span class="s">`json:&#34;language&#34;`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Email</span>    <span class="kt">string</span> <span class="s">`json:&#34;email,omitempty&#34;`</span>
+	<span class="nx">Password</span> <span class="kt">string</span> <span class="s">`json:&#34;password,omitempty&#34;`</span>
+    <span class="c1">// 这里Others嵌套结构体没有写tag，序列化后的数据就不会有嵌套结构
+</span><span class="c1"></span>	<span class="nx">Others</span>
+<span class="p">}</span>
+
+<span class="nx">u1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
+	<span class="nx">Email</span><span class="p">:</span>    <span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">res</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">u1</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res</span><span class="p">))</span>
+
+<span class="c1">// output
+</span><span class="c1"></span><span class="p">{</span><span class="s">&#34;email&#34;</span><span class="p">:</span><span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span><span class="s">&#34;language&#34;</span><span class="p">:</span><span class="s">&#34;&#34;</span><span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Others</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Language</span> <span class="kt">string</span> <span class="s">`json:&#34;language&#34;`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Email</span>    <span class="kt">string</span> <span class="s">`json:&#34;email,omitempty&#34;`</span>
+	<span class="nx">Password</span> <span class="kt">string</span> <span class="s">`json:&#34;password,omitempty&#34;`</span>
+    <span class="c1">// 加上tag，输出正常
+</span><span class="c1"></span>	<span class="nx">Others</span> <span class="s">`json:&#34;others&#34;`</span>
+<span class="p">}</span>
+
+<span class="nx">u1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
+	<span class="nx">Email</span><span class="p">:</span>    <span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">res</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">u1</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res</span><span class="p">))</span>
+
+<span class="c1">// output
+</span><span class="c1"></span><span class="p">{</span><span class="s">&#34;email&#34;</span><span class="p">:</span><span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span><span class="s">&#34;others&#34;</span><span class="p">:{</span><span class="s">&#34;language&#34;</span><span class="p">:</span><span class="s">&#34;&#34;</span><span class="p">}}</span>
+</code></pre></div><p><strong>坑二</strong>：想要忽略嵌套结构体的字段，仅仅加上<code>omitempty</code>字段还不够，嵌套结构体需要使用指针。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Others</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Language</span> <span class="kt">string</span> <span class="s">`json:&#34;language&#34;`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Email</span>    <span class="kt">string</span> <span class="s">`json:&#34;email,omitempty&#34;`</span>
+	<span class="nx">Password</span> <span class="kt">string</span> <span class="s">`json:&#34;password,omitempty&#34;`</span>
+    <span class="c1">// 嵌套结构体不使用指针，omitempty不会生效
+</span><span class="c1"></span>	<span class="nx">Others</span> <span class="s">`json:&#34;others,omitempty&#34;`</span>
+<span class="p">}</span>
+
+<span class="nx">u1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
+	<span class="nx">Email</span><span class="p">:</span>    <span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">res</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">u1</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res</span><span class="p">))</span>
+
+<span class="c1">// output
+</span><span class="c1"></span><span class="p">{</span><span class="s">&#34;email&#34;</span><span class="p">:</span><span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span><span class="s">&#34;others&#34;</span><span class="p">:{</span><span class="s">&#34;language&#34;</span><span class="p">:</span><span class="s">&#34;&#34;</span><span class="p">}}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Others</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Language</span> <span class="kt">string</span> <span class="s">`json:&#34;language&#34;`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Email</span>    <span class="kt">string</span> <span class="s">`json:&#34;email,omitempty&#34;`</span>
+	<span class="nx">Password</span> <span class="kt">string</span> <span class="s">`json:&#34;password,omitempty&#34;`</span>
+    <span class="c1">// 使用指针后生效
+</span><span class="c1"></span>	<span class="o">*</span><span class="nx">Others</span> <span class="s">`json:&#34;others,omitempty&#34;`</span>
+<span class="p">}</span>
+
+<span class="nx">u1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
+	<span class="nx">Email</span><span class="p">:</span>    <span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">res</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">u1</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res</span><span class="p">))</span>
+
+<span class="c1">// output
+</span><span class="c1"></span><span class="p">{</span><span class="s">&#34;email&#34;</span><span class="p">:</span><span class="s">&#34;pokit@qq.com&#34;</span><span class="p">}</span>
+</code></pre></div><h2 id="6-不修改原结构体忽略空值字段">6. 不修改原结构体忽略空值字段</h2>
+<p>我们需要<code>json</code>序列化<code>User</code>，但是不想把密码也序列化，又不想修改<code>User</code>结构体，这个时候我们就可以使用创建另外一个结构体<code>PublicUser</code>匿名嵌套原<code>User</code>，同时指定<code>Password</code>字段为匿名结构体指针类型，并添加<code>omitempty</code>tag</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Email</span>    <span class="kt">string</span> <span class="s">`json:&#34;email&#34;`</span>
+	<span class="nx">Password</span> <span class="kt">string</span> <span class="s">`json:&#34;password&#34;`</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">UserNoPassword</span> <span class="kd">struct</span><span class="p">{</span>
+	<span class="o">*</span><span class="nx">User</span> <span class="c1">// 匿名嵌套
+</span><span class="c1"></span>	<span class="c1">// 直接忽略Password字段，注意不要跟上述&#34;-&#34;搞混
+</span><span class="c1"></span>	<span class="nx">Password</span> <span class="o">*</span><span class="kd">struct</span><span class="p">{}</span> <span class="s">`json:&#34;password,omitempty&#34;`</span>
+<span class="p">}</span>
+
+<span class="nx">u1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
+	<span class="nx">Email</span><span class="p">:</span>    <span class="s">&#34;pokit@qq.com&#34;</span><span class="p">,</span>
+	<span class="nx">Password</span><span class="p">:</span> <span class="s">&#34;123456&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">res</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">UserNoPassword</span><span class="p">{</span><span class="nx">User</span><span class="p">:</span> <span class="nx">u1</span><span class="p">})</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res</span><span class="p">))</span>
+
+<span class="c1">// output
+</span><span class="c1"></span><span class="p">{</span><span class="s">&#34;email&#34;</span><span class="p">:</span><span class="s">&#34;pokit@qq.com&#34;</span><span class="p">}</span>
+</code></pre></div><h2 id="7-类型转换">7. 类型转换</h2>
+<p>有时候<code>json</code>传过来的某个字段是<code>string</code>类型，但是反序列化到结构体中需要是<code>int</code>类型，就可以使用tag做类型转换</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Age</span>    <span class="kt">int</span>     <span class="s">`json:&#34;age,string&#34;`</span>
+	<span class="nx">Height</span> <span class="kt">float32</span> <span class="s">`json:&#34;height,string&#34;`</span>
+<span class="p">}</span>
+<span class="nx">s</span> <span class="o">:=</span> <span class="s">`{&#34;age&#34;:&#34;18&#34;,&#34;height&#34;:&#34;172.3&#34;}`</span>
+<span class="kd">var</span> <span class="nx">u</span> <span class="nx">User</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Unmarshal</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="o">&amp;</span><span class="nx">u</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+	<span class="nx">log</span><span class="p">.</span><span class="nf">Panicf</span><span class="p">(</span><span class="s">&#34;Unmarshal failed:%s&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%+v&#34;</span><span class="p">,</span><span class="nx">u</span><span class="p">)</span>
+
+<span class="c1">// output
+</span><span class="c1"></span><span class="p">{</span><span class="nx">Age</span><span class="p">:</span><span class="mi">18</span> <span class="nx">Height</span><span class="p">:</span><span class="mf">172.3</span><span class="p">}</span>
+</code></pre></div><p>但是这里有个坑，如果要转换类型，但是传过来的类型不是指定类型，例如上述<code>age</code>在<code>json</code>里是字符串，若果传<code>int</code>，就会报错，所以这个技巧慎用。</p>
+<p>以上，就是常用的<code>tag</code>使用技巧，后续遇到其他需求再进行补充。</p>
+<p><strong>参考:</strong></p>
+<p>[<a href="https://colobu.com/2017/06/21/json-tricks-in-Go/" target="_blank" rel="noopener noreffer">转]Golang 中使用 JSON 的小技巧 | 鸟窝 (colobu.com)</a></p>
+<p><a href="https://stackoverflow.com/questions/11066946/partly-json-unmarshal-into-a-map-in-go" target="_blank" rel="noopener noreffer">Partly JSON unmarshal into a map in Go - Stack Overflow (stackoverflow.com)</a></p>
+<p><a href="https://www.liwenzhou.com/posts/Go/json_tricks_in_go/" target="_blank" rel="noopener noreffer">你需要知道的那些go语言json技巧 | 李文周的博客 (liwenzhou.com)</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-09-05</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/posts/golang/golang%E4%B8%ADtag%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang/">golang</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/k8s/k8s%E9%83%A8%E7%BD%B2/" class="prev" rel="prev" title="K8S部署"><i class="fas fa-angle-left fa-fw"></i>K8S部署</a>
+            <a href="/posts/golang/golang%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7pprof/" class="next" rel="next" title="Golang性能分析工具pprof">Golang性能分析工具pprof<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.69.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://pokitpeng.github.io/about/" target="_blank">Pokit Peng</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

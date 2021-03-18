@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Ansiable自动化运维 - Pokit Blog</title><meta name="Description" content=""><meta property="og:title" content="Ansiable自动化运维" />
+<meta property="og:description" content="前段时间公司测试环境一直在更换，而每次更换环境都是一件非常痛苦的事情，因为新的操作系统都要做很多的初始化工作，一个节点两个节点还没什么，一旦" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pokitpeng.github.io/posts/linux/ansiable/" />
+<meta property="og:image" content="https://pokitpeng.github.io"/>
+<meta property="article:published_time" content="2020-07-16T20:42:32+08:00" />
+<meta property="article:modified_time" content="2020-07-16T20:42:32+08:00" /><meta property="og:site_name" content="Pokit Blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://pokitpeng.github.io"/>
+
+<meta name="twitter:title" content="Ansiable自动化运维"/>
+<meta name="twitter:description" content="前段时间公司测试环境一直在更换，而每次更换环境都是一件非常痛苦的事情，因为新的操作系统都要做很多的初始化工作，一个节点两个节点还没什么，一旦"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/image/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://pokitpeng.github.io/posts/linux/ansiable/" /><link rel="prev" href="https://pokitpeng.github.io/posts/golang/protobuf%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/" /><link rel="next" href="https://pokitpeng.github.io/posts/golang/golang%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Ansiable自动化运维",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/pokitpeng.github.io\/posts\/linux\/ansiable\/"
+        },"genre": "posts","keywords": "linux","wordcount":  1833 ,
+        "url": "https:\/\/pokitpeng.github.io\/posts\/linux\/ansiable\/","datePublished": "2020-07-16T20:42:32+08:00","dateModified": "2020-07-16T20:42:32+08:00","publisher": {
+            "@type": "Organization",
+            "name": "Pokit Peng"},"author": {
+                "@type": "Person",
+                "name": "Pokit Peng"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Pokit Blog">Pokit Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/posts/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Pokit Blog">Pokit Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/posts/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Ansiable自动化运维</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://pokitpeng.github.io/about/" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Pokit Peng</a></span>&nbsp;<span class="post-category">收录于 <a href=""><i class="far fa-folder fa-fw"></i></a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-07-16">2020-07-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1833 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#简介">简介</a></li>
+    <li><a href="#ansible组成结构">Ansible组成结构</a></li>
+    <li><a href="#使用">使用</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>前段时间公司测试环境一直在更换，而每次更换环境都是一件非常痛苦的事情，因为新的操作系统都要做很多的初始化工作，一个节点两个节点还没什么，一旦节点多了，每次做重复的事情就显得很浪费时间而且容器出错，于是就花了几个小时研究一了下<code>ansiable</code>这款工具，虽然研究的不深，但是满足自己的日常所需了。</p>
+</blockquote>
+<h2 id="简介">简介</h2>
+<p><code>Ansible</code>是一款简单的运维自动化工具，使用ssh协议连接来进行系统管理、自动化执行命令、部署等任务，因此不需要单独安装客户端，也不需要启动任何服务。而且<code>ansible</code>有个很厉害的特性就是<code>幂等性</code>，允许多次重复执行，再也不用担心用多了把系统搞乱了。</p>
+<h2 id="ansible组成结构">Ansible组成结构</h2>
+<ul>
+<li>Ansible</li>
+</ul>
+<p>Ansible的命令工具，核心执行工具；一次性或临时执行的操作都是通过该命令执行。</p>
+<ul>
+<li>Ansible Playbook</li>
+</ul>
+<p>又称任务集，编排定义Ansible任务集的配置文件，由Ansible顺序依次执行，yaml格式。</p>
+<ul>
+<li>Inventory</li>
+</ul>
+<p>Ansible管理主机的清单，默认是/etc/ansible/hosts文件。</p>
+<ul>
+<li>Modules</li>
+</ul>
+<p>Ansible执行命令的功能模块，到Ansible 2.3版本为止，共有1039个模块，支持自定义模块，常用模块有command、shell、copy、fetch、file、yum、service、mount、cron、group、user等。</p>
+<ul>
+<li>Plugins</li>
+</ul>
+<p>插件部分（对模块功能的补充），常有连接类型插件、循环插件、变量插件、过滤插件，插件功能用的较少。</p>
+<ul>
+<li>API</li>
+</ul>
+<p>提供给第三方程序调用的应用程序编程接口。</p>
+<h2 id="使用">使用</h2>
+<h4 id="安装">安装</h4>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">yum install -y epel-release ansible
+</code></pre></div><h4 id="检查">检查</h4>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">rpm -qa<span class="p">|</span>grep ansible
+</code></pre></div><h4 id="生成私钥和秘钥">生成私钥和秘钥</h4>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">ssh-keygen -t rsa -f ~/.ssh/id_rsa -N <span class="s1">&#39;&#39;</span>
+</code></pre></div><h4 id="配置远程机器默认配置文件是etcansiblehosts">配置远程机器，默认配置文件是<code>/etc/ansible/hosts</code></h4>
+<pre><code># 方式一：每个节点单独的用户名密码
+[remote]
+192.168.50.200 ansible_ssh_user='root' ansible_ssh_pass='daemon'
+192.168.50.29 ansible_ssh_user='root' ansible_ssh_pass='gj2019'
+
+# 方式二：所有的节点都是同一个用户名密码
+[remote]
+192.168.50.200
+192.168.50.201
+[remote:vars]
+ansible_ssh_pass='daemon'
+ansible_ssh_user='root'
+
+# 方式三：以上两种模式混合
+[remote]
+192.168.50.200
+192.168.50.29 ansible_ssh_user='root' ansible_ssh_pass='gj2019'
+[remote:vars]
+ansible_ssh_pass='daemon'
+ansible_ssh_user='root'
+</code></pre><h4 id="去除密码检查">去除密码检查</h4>
+<p>默认配置文件是<code>/etc/ansible/ansible.cfg</code>（71行）</p>
+<div class="highlight"><pre class="chroma"><code class="language-ini" data-lang="ini"><span class="c1">#host_key_checking = False      # 去掉注释即可</span>
+</code></pre></div><h4 id="ansiable常用选项">ansiable常用选项</h4>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">-a 后面跟着要执行的模块参数。
+-k 输入SSH的登录密码
+-K sudo提权的密码
+-B SECONDS：后台运行超时时间
+-f 指定要使用的并行进程数，default <span class="o">=</span> <span class="m">5</span>
+-i 指定库存主机文件，default <span class="o">=</span> /etc/ansible/hosts
+-m 要执行的模块名称，default <span class="o">=</span> <span class="nb">command</span>
+-s 运行sudo（nopasswd）
+-T 指定SSH默认超时时间，default <span class="o">=</span> <span class="m">10</span>
+--version 显示程序版本号并退出
+</code></pre></div><h4 id="ansiable配置文件">ansiable配置文件</h4>
+<p>默认配置文件路径为/etc/ansible/ansible.cfg，常用参数如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">inventory</span>   <span class="o">=</span> /etc/ansible/hosts      <span class="c1">#被控制的主机配置文件</span>
+<span class="nv">library</span>    <span class="o">=</span> /usr/share/my_modules/  <span class="c1">#Ansible默认搜寻模块的位置</span>
+<span class="nv">remote_tmp</span>   <span class="o">=</span> ~/.ansible/tmp      <span class="c1">#远程主机缓存目录</span>
+<span class="nv">local_tmp</span>   <span class="o">=</span> ~/.ansible/tmp        <span class="c1">#本地缓存目录</span>
+<span class="nv">forks</span>     <span class="o">=</span> <span class="m">5</span>                     <span class="c1">#这个选项设置在与主机通信时的默认并行进程数</span>
+<span class="nv">poll_interval</span> <span class="o">=</span> <span class="m">15</span>                   <span class="c1">#轮询时间</span>
+<span class="nv">sudo_user</span>   <span class="o">=</span> root                <span class="c1">#默认sudo用户</span>
+<span class="nv">ask_sudo_pass</span> <span class="o">=</span> True               <span class="c1">#默认sudo用户是否需要输入密码</span>
+<span class="nv">ask_pass</span>    <span class="o">=</span> Fales                <span class="c1">#每次执行都需要询问ssh密码</span>
+<span class="nv">remote_port</span>  <span class="o">=</span> <span class="m">22</span>                 <span class="c1">#被控主机默认端口</span>
+<span class="nv">module_lang</span>  <span class="o">=</span> C                 <span class="c1">#ansible默认语言</span>
+<span class="nv">timeout</span>    <span class="o">=</span> <span class="m">10</span>                  <span class="c1">#默认ssh尝试连接超时时间</span>
+</code></pre></div><h4 id="主机操作">主机操作</h4>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 远程操作所有主机</span>
+ansible all -m ping
+<span class="c1"># 远程操作某个分组主机</span>
+ansible &lt;分组名&gt; -m ping
+<span class="c1"># 远程操作某个主机</span>
+ansible &lt;主机清单中的ip&gt; -m ping
+</code></pre></div><h4 id="模块应用">模块应用</h4>
+<p>ansible命令格式：</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">ansible &lt;主机清单中的ip或者分组名&gt; -m &lt;模块&gt; -a <span class="s2">&#34;&lt;参数&gt;&#34;</span>
+</code></pre></div><p>cron模块示例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 检查连通性</span>
+ansible remote -m ping
+
+<span class="c1">#同步当前主机时间</span>
+ntpdate ntp.aliyun.com
+
+<span class="c1">#cron模块示例</span>
+<span class="c1">#每小时与时钟源同步一次</span>
+ansible remote -m cron -a <span class="s1">&#39;name=&#34;test cron&#34; job=&#34;ntpdate ntp.aliyun.com&#34; minute=0 hour=*/1&#39;</span>
+
+<span class="c1"># copy模块示例</span>
+ansible remote -m copy -a <span class="s1">&#39;src=&#34;/root/anaconda-ks.cfg&#34; dest=&#34;/root/anaconda-ks.cfg&#34;&#39;</span>
+</code></pre></div><h4 id="执行shell命令">执行shell命令</h4>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># -m shell -a</span>
+ansible remote -m shell -a  <span class="s2">&#34;netstat -anp|grep 80&#34;</span>
+
+<span class="c1"># -m raw -a</span> 
+ansible remote -m raw  -a <span class="s2">&#34;ifconfig|head -n 5&#34;</span>
+</code></pre></div><h4 id="执行ansible-playbook">执行ansible-playbook</h4>
+<p>这里使用一个初始化操作系统的示例演示：</p>
+<p><code>init.yaml</code>文件内容如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">---<span class="w">
+</span><span class="w"></span>- <span class="k">hosts</span><span class="p">:</span><span class="w"> </span>remote<span class="w">
+</span><span class="w">  </span><span class="c"># remote_usr: root</span><span class="w">
+</span><span class="w">  </span><span class="c"># remote_pwd: daemon</span><span class="w">
+</span><span class="w">  </span><span class="c"># gather_facts: no #开启debug</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="k">tasks</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>copy<span class="w"> </span>init<span class="w"> </span>file<span class="w">
+</span><span class="w">      </span><span class="k">copy</span><span class="p">:</span><span class="w"> </span>src=~/init.sh<span class="w"> </span>dest=~/init.sh<span class="w">
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>exec<span class="w"> </span>init<span class="w"> </span>shell<span class="w">
+</span><span class="w">      </span><span class="k">shell</span><span class="p">:</span><span class="w"> </span>bash<span class="w"> </span>~/init.sh<span class="w">
+</span><span class="w">      </span><span class="k">register</span><span class="p">:</span><span class="w"> </span>log<span class="w">
+</span><span class="w">    </span>- <span class="k">debug</span><span class="p">:</span><span class="w"> </span>var=log.stdout_lines<span class="w">   
+</span></code></pre></div><p><code>init.sh</code>文件内容如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/usr/bin/env bash
+</span><span class="cp"></span>
+<span class="nv">ip</span><span class="o">=</span><span class="sb">`</span>ip addr <span class="p">|</span> grep <span class="s1">&#39;state UP&#39;</span> -A2<span class="p">|</span>grep 192.168<span class="p">|</span>head -n 1<span class="p">|</span>awk <span class="s1">&#39;{print $2}&#39;</span><span class="p">|</span>awk -F <span class="s2">&#34;/&#34;</span> <span class="s1">&#39;{print $1}&#39;</span><span class="sb">`</span>
+<span class="nv">num</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="si">${</span><span class="nv">ip</span><span class="si">}</span><span class="p">|</span>awk -F <span class="s2">&#34;.&#34;</span> <span class="s1">&#39;{print $4}&#39;</span><span class="sb">`</span>
+
+<span class="c1">#设置hostname</span>
+hostnamectl --static set-hostname n<span class="si">${</span><span class="nv">num</span><span class="si">}</span>
+<span class="nb">echo</span> <span class="s2">&#34;set hostname success&#34;</span>
+<span class="nb">echo</span> hostname:<span class="sb">`</span>hostname<span class="sb">`</span>
+
+<span class="c1">#设置nameserver</span>
+<span class="nb">echo</span> <span class="s2">&#34;nameserver 114.114.114.114&#34;</span> &gt; /etc/resolv.conf
+<span class="nb">echo</span> <span class="s2">&#34;set nameserver success&#34;</span>
+
+<span class="c1">#安装基础工具</span>
+yum -y install vim rdate git &gt; /dev/null 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">&#34;install tools success&#34;</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">&#34;install tools field&#34;</span>
+
+<span class="c1">#vim基础配置</span>
+cat <span class="s">&lt;&lt;EOF &gt;~/.vimrc
+</span><span class="s">set number
+</span><span class="s">set syntax=on
+</span><span class="s">set tabstop=4
+</span><span class="s">set autoindent
+</span><span class="s">EOF</span>
+
+<span class="nb">echo</span> <span class="s2">&#34;alias vi=&#39;vim&#39;&#34;</span> &gt;&gt; ~/.bashrc
+<span class="nb">source</span> ~/.bashrc
+<span class="nb">echo</span> <span class="s2">&#34;set vim success&#34;</span>
+
+<span class="c1">#时间同步</span>
+rdate -s time.nist.gov
+<span class="nb">echo</span> <span class="s2">&#34;sync date success&#34;</span>
+<span class="nb">echo</span> date:<span class="sb">`</span>date<span class="sb">`</span>
+
+<span class="c1">#关闭防火墙</span>
+systemctl stop firewalld <span class="o">&amp;&amp;</span> systemctl disable firewalld
+<span class="nb">echo</span> <span class="s2">&#34;stop firewalld success&#34;</span>
+
+<span class="c1">#临时关闭SElinux</span>
+setenforce <span class="m">0</span> 2&gt;1 /dev/null <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">&#34;close SElinux success&#34;</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">&#34;close SElinux field&#34;</span>
+
+<span class="c1">#永久关闭SElinux(重启生效)</span>
+sed -ri <span class="s1">&#39;s#(SELINUX=).*#\1disabled#&#39;</span> /etc/selinux/config
+<span class="nb">echo</span> <span class="s2">&#34;disabled SElinux success&#34;</span>
+</code></pre></div><p>执行检查：<code>ansible-playbook init.yaml -C</code></p>
+<p>执行操作：<code>ansible-playbook init.yaml</code></p>
+<p>OK大功告成！</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://ansible-tran.readthedocs.io/en/latest/docs/intro_installation.html">https://ansible-tran.readthedocs.io/en/latest/docs/intro_installation.html</a></p>
+<p><a href="https://www.cnblogs.com/tongyishu/p/12918052.html">https://www.cnblogs.com/tongyishu/p/12918052.html</a></p>
+<p><a href="https://www.cnblogs.com/linuxk/p/11866765.html">https://www.cnblogs.com/linuxk/p/11866765.html</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-07-16</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/posts/linux/ansiable/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/linux/">linux</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/golang/protobuf%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/" class="prev" rel="prev" title="Protobuf初体验"><i class="fas fa-angle-left fa-fw"></i>Protobuf初体验</a>
+            <a href="/posts/golang/golang%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3/" class="next" rel="next" title="Golang中的接口">Golang中的接口<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.69.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://pokitpeng.github.io/about/" target="_blank">Pokit Peng</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

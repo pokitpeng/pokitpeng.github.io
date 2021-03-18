@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Vim打造golang开发环境 - Pokit Blog</title><meta name="Description" content=""><meta property="og:title" content="Vim打造golang开发环境" />
+<meta property="og:description" content="1. 前言 之前一直使用jetbrains家族的各个IDE,用起来也非常的方便，前几天刚好激活码也过期了，懒得找激活，就想趁着这股劲就想把vim搞" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pokitpeng.github.io/posts/linux/vim%E6%89%93%E9%80%A0golang%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" />
+<meta property="og:image" content="https://pokitpeng.github.io"/>
+<meta property="article:published_time" content="2020-08-20T22:59:29+08:00" />
+<meta property="article:modified_time" content="2020-08-20T22:59:29+08:00" /><meta property="og:site_name" content="Pokit Blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://pokitpeng.github.io"/>
+
+<meta name="twitter:title" content="Vim打造golang开发环境"/>
+<meta name="twitter:description" content="1. 前言 之前一直使用jetbrains家族的各个IDE,用起来也非常的方便，前几天刚好激活码也过期了，懒得找激活，就想趁着这股劲就想把vim搞"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/image/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://pokitpeng.github.io/posts/linux/vim%E6%89%93%E9%80%A0golang%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" /><link rel="prev" href="https://pokitpeng.github.io/posts/golang/golang%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%A7%A3%E6%9E%90%E4%B9%8Bflag/" /><link rel="next" href="https://pokitpeng.github.io/posts/k8s/k8s%E9%83%A8%E7%BD%B2/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Vim打造golang开发环境",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/pokitpeng.github.io\/posts\/linux\/vim%E6%89%93%E9%80%A0golang%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83\/"
+        },"genre": "posts","keywords": "golang, vim","wordcount":  3205 ,
+        "url": "https:\/\/pokitpeng.github.io\/posts\/linux\/vim%E6%89%93%E9%80%A0golang%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83\/","datePublished": "2020-08-20T22:59:29+08:00","dateModified": "2020-08-20T22:59:29+08:00","publisher": {
+            "@type": "Organization",
+            "name": "Pokit Peng"},"author": {
+                "@type": "Person",
+                "name": "Pokit Peng"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Pokit Blog">Pokit Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/posts/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Pokit Blog">Pokit Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/posts/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Vim打造golang开发环境</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://pokitpeng.github.io/about/" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Pokit Peng</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/vim/"><i class="far fa-folder fa-fw"></i>vim</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-08-20">2020-08-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3205 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 7 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-前言">1. 前言</a></li>
+    <li><a href="#2-安装">2. 安装</a>
+      <ul>
+        <li><a href="#21-安装neovim">2.1. 安装neovim</a></li>
+        <li><a href="#22-插件管理">2.2. 插件管理</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-配置">3. 配置</a>
+      <ul>
+        <li><a href="#31-基础配置">3.1. 基础配置</a></li>
+        <li><a href="#32-插件配置">3.2. 插件配置</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-最终配置">4. 最终配置</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="1-前言">1. 前言</h2>
+<p>之前一直使用jetbrains家族的各个IDE,用起来也非常的方便，前几天刚好激活码也过期了，懒得找激活，就想趁着这股劲就想把vim搞起来，其实也试过目前挺火的 vacode 但是使用起来 总是感觉差点什么，常用快捷键也和goland的变化太大，又得重新去记快捷键，有点学习成本还麻烦，既然学习那为什么不学vim呢？学习成本越大的，往往后面收益越大，而且vim 的很多快捷键和 shell，git下的快捷键是通用的。网上也从未停止过vim与其他编辑器或IDE的讨论,例如 最早的eclipse 和 vim 那个更强大，后来的sublime和vim的比较等等，这两年vscode又火了，都拿来和vim来作比较，没准过个几年某乎又会出现 xxx编辑器和vim那个更强大！所以学会学好使用vim还是很有必要的。好多资深大佬也都强烈推荐学习，毕竟都是过来人。</p>
+<h2 id="2-安装">2. 安装</h2>
+<h3 id="21-安装neovim">2.1. 安装neovim</h3>
+<blockquote>
+<p>官方文档：<a href="https://github.com/neovim/neovim/wiki/Installing-Neovim#Linux" target="_blank" rel="noopener noreffer">https://github.com/neovim/neovim/wiki/Installing-Neovim#Linux</a></p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install -y neovim python3-neovim git
+<span class="c1"># you might need python2-neovim as well on older Fedora releases</span>
+</code></pre></div><p>以上安装的是0.3.0，与后面插件有兼容性问题，建议安装最新版最新版：<a href="https://github.com/neovim/neovim/releases/tag/v0.4.4" target="_blank" rel="noopener noreffer">https://github.com/neovim/neovim/releases/tag/v0.4.4</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">wget https://github.com/neovim/neovim/releases/download/v0.4.4/nvim.appimage -P /usr/local/
+
+<span class="nb">cd</span> /usr/local/
+
+chmod +x nvim.appimage
+
+./nvim.appimage --appimage-extract
+
+ln -s <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/squashfs-root/usr/bin/nvim /usr/local/bin/nvim
+
+rm -rf nvim.appimage
+</code></pre></div><h3 id="22-插件管理">2.2. 插件管理</h3>
+<blockquote>
+<p>官方文档：<a href="https://github.com/junegunn/vim-plug" target="_blank" rel="noopener noreffer">https://github.com/junegunn/vim-plug</a></p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs <span class="se">\
+</span><span class="se"></span>    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+</code></pre></div><p>之后打开 <code>~/.config/nvim/init.vim</code> ，添加：</p>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="nx">call</span> <span class="nx">plug</span>#<span class="nx">begin</span><span class="p">(</span><span class="s1">&#39;~/.vim/plugged&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nx">call</span> <span class="nx">plug</span>#<span class="nx">end</span><span class="p">()</span><span class="err">
+</span></code></pre></div><p>begin括号里面的意思就是之后安装的插件全放在这个目录下，可根据个人情况修改。</p>
+<p>Reload .vimrc and <code>:PlugInstall</code> to install plugins，其他常用命名：</p>
+<pre><code>:PlugUpdate
+:PlugClean
+:PlugStatus
+</code></pre><h2 id="3-配置">3. 配置</h2>
+<h3 id="31-基础配置">3.1. 基础配置</h3>
+<p>基础配置如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="c">&#34;==============================================================================</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; vim 基础配置 </span><span class="err">
+</span><span class="err"></span><span class="c">&#34;==============================================================================</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; leader按键</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">mapleader</span> <span class="p">=</span> <span class="s2">&#34;\&lt;space&gt;&#34;</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; 检测文件类型</span><span class="err">
+</span><span class="err"></span><span class="nx">filetype</span> <span class="nx">on</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; 针对不同的文件类型采用不同的缩进格式</span><span class="err">
+</span><span class="err"></span><span class="nx">filetype</span> <span class="nx">indent</span> <span class="nx">on</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; 允许插件</span><span class="err">
+</span><span class="err"></span><span class="nx">filetype</span> <span class="nx">plugin</span> <span class="nx">on</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; 启动自动补全</span><span class="err">
+</span><span class="err"></span><span class="nx">filetype</span> <span class="nx">plugin</span> <span class="nx">indent</span> <span class="nx">on</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">
+</span><span class="c">&#34; 在上下移动光标时，光标的上方或下方至少会保留显示的行数</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">scrolloff</span><span class="p">=</span><span class="m">7</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; 切换paste模式</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">pastetoggle</span><span class="p">=&lt;</span><span class="nx">F3</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;显示行号</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">number</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;开启语法高亮</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">syntax</span><span class="p">=</span><span class="nx">on</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;设置以unix的格式保存文件&#34;</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">fileformat</span><span class="p">=</span><span class="nx">unix</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;设置table长度</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">tabstop</span><span class="p">=</span><span class="m">4</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;同上</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">shiftwidth</span><span class="p">=</span><span class="m">4</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;文件编码</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">fenc</span><span class="p">=</span><span class="nx">utf</span><span class="m">-8</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;启用鼠标</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">mouse</span><span class="p">=</span><span class="nx">a</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;突出显示当前行</span><span class="err">
+</span><span class="err"></span><span class="c">&#34;set cursorline</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;文件编码</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">encoding</span><span class="p">=</span><span class="nx">utf</span><span class="m">-8</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;自动缩进</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">autoindent</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">softtabstop</span><span class="p">=</span><span class="m">4</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;自动缩进所使用的空白长度指示</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">shiftwidth</span><span class="p">=</span><span class="m">4</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">expandtab</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;==============================================================================</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; other config </span><span class="err">
+</span><span class="err"></span><span class="c">&#34;==============================================================================</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; vimrc文件修改之后自动加载, windows</span><span class="err">
+</span><span class="err"></span><span class="nx">autocmd</span><span class="p">!</span> <span class="nx">bufwritepost</span> <span class="nx">_vimrc</span> <span class="nx">source</span> %<span class="err">
+</span><span class="err"></span><span class="c">&#34; vimrc文件修改之后自动加载, linux</span><span class="err">
+</span><span class="err"></span><span class="nx">autocmd</span><span class="p">!</span> <span class="nx">bufwritepost</span> .<span class="nx">vimrc</span> <span class="nx">source</span> %<span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; 自动补全配置</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; 让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">completeopt</span><span class="p">=</span><span class="nx">longest</span><span class="p">,</span><span class="nx">menu</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; 增强模式中的命令行自动完成操作</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">wildmenu</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Ignore compiled files</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">wildignore</span><span class="p">=</span>*.<span class="nx">o</span><span class="p">,</span>*<span class="p">~,</span>*.<span class="nx">pyc</span><span class="p">,</span>*.<span class="nx">class</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; 离开插入模式后自动关闭预览窗口</span><span class="err">
+</span><span class="err"></span><span class="nx">autocmd</span> <span class="nx">InsertLeave</span> * <span class="k">if</span> <span class="nx">pumvisible</span><span class="p">()</span> <span class="p">==</span> <span class="m">0</span><span class="p">|</span><span class="nx">pclose</span><span class="p">|</span><span class="k">endif</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; 回车即选中当前项</span><span class="err">
+</span><span class="err"></span><span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">expr</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">CR</span><span class="p">&gt;</span>       <span class="nx">pumvisible</span><span class="p">()</span> ? <span class="s2">&#34;\&lt;C-y&gt;&#34;</span> : <span class="s2">&#34;\&lt;CR&gt;&#34;</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; In the quickfix window, &lt;CR&gt; is used to jump to the error under the</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; cursor, so undefine the mapping there.</span><span class="err">
+</span><span class="err"></span><span class="nx">autocmd</span> <span class="nx">BufReadPost</span> <span class="nx">quickfix</span> <span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">buffer</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">CR</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">CR</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; quickfix window  s/v to open in split window,  ,gd/,jd =&gt; quickfix window =&gt; open it</span><span class="err">
+</span><span class="err"></span><span class="nx">autocmd</span> <span class="nx">BufReadPost</span> <span class="nx">quickfix</span> <span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">buffer</span><span class="p">&gt;</span> <span class="nx">v</span> <span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">w</span><span class="p">&gt;&lt;</span><span class="nx">Enter</span><span class="p">&gt;&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">w</span><span class="p">&gt;</span><span class="nx">L</span><span class="err">
+</span><span class="err"></span><span class="nx">autocmd</span> <span class="nx">BufReadPost</span> <span class="nx">quickfix</span> <span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">buffer</span><span class="p">&gt;</span> <span class="nx">s</span> <span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">w</span><span class="p">&gt;&lt;</span><span class="nx">Enter</span><span class="p">&gt;&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">w</span><span class="p">&gt;</span><span class="nx">K</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; command-line window</span><span class="err">
+</span><span class="err"></span><span class="nx">autocmd</span> <span class="nx">CmdwinEnter</span> * <span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">buffer</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">CR</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">CR</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">
+</span><span class="c">&#34; 上下左右键的行为 会显示其他信息</span><span class="err">
+</span><span class="err"></span><span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">expr</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">Down</span><span class="p">&gt;</span>     <span class="nx">pumvisible</span><span class="p">()</span> ? <span class="s2">&#34;\&lt;C-n&gt;&#34;</span> : <span class="s2">&#34;\&lt;Down&gt;&#34;</span><span class="err">
+</span><span class="err"></span><span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">expr</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">Up</span><span class="p">&gt;</span>       <span class="nx">pumvisible</span><span class="p">()</span> ? <span class="s2">&#34;\&lt;C-p&gt;&#34;</span> : <span class="s2">&#34;\&lt;Up&gt;&#34;</span><span class="err">
+</span><span class="err"></span><span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">expr</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">PageDown</span><span class="p">&gt;</span> <span class="nx">pumvisible</span><span class="p">()</span> ? <span class="s2">&#34;\&lt;PageDown&gt;\&lt;C-p&gt;\&lt;C-n&gt;&#34;</span> : <span class="s2">&#34;\&lt;PageDown&gt;&#34;</span><span class="err">
+</span><span class="err"></span><span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">expr</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">PageUp</span><span class="p">&gt;</span>   <span class="nx">pumvisible</span><span class="p">()</span> ? <span class="s2">&#34;\&lt;PageUp&gt;\&lt;C-p&gt;\&lt;C-n&gt;&#34;</span> : <span class="s2">&#34;\&lt;PageUp&gt;&#34;</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写</span><span class="err">
+</span><span class="err"></span><span class="k">if</span> <span class="nx">has</span><span class="p">(</span><span class="s2">&#34;autocmd&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>  <span class="nx">au</span> <span class="nx">BufReadPost</span> * <span class="k">if</span> <span class="nx">line</span><span class="p">(</span><span class="s2">&#34;&#39;\&#34;&#34;</span><span class="p">)</span> <span class="p">&gt;</span> <span class="m">1</span> &amp;&amp; <span class="nx">line</span><span class="p">(</span><span class="s2">&#34;&#39;\&#34;&#34;</span><span class="p">)</span> <span class="p">&lt;=</span> <span class="nx">line</span><span class="p">(</span><span class="s2">&#34;$&#34;</span><span class="p">)</span> <span class="p">|</span> <span class="nx">exe</span> <span class="s2">&#34;normal! g&#39;\&#34;&#34;</span> <span class="p">|</span> <span class="k">endif</span><span class="err">
+</span><span class="err"></span><span class="k">endif</span><span class="err">
+</span></code></pre></div><h3 id="32-插件配置">3.2. 插件配置</h3>
+<h4 id="321-目录管理">3.2.1. 目录管理</h4>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="nx">Plug</span> <span class="s1">&#39;scrooloose/nerdtree&#39;</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c"> &#34; NERDTree config</span><span class="err">
+</span><span class="err"></span><span class="c"> &#34; F2键快速调出和隐藏它</span><span class="err">
+</span><span class="err"></span> <span class="nx">map</span> <span class="p">&lt;</span><span class="nx">F2</span><span class="p">&gt;</span> :<span class="nx">NERDTreeToggle</span><span class="p">&lt;</span><span class="nx">CR</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c"> &#34; 关闭vim时，如果打开的文件除了NERDTree没有其他文件时，它自动关闭，减少多次按:q!</span><span class="err">
+</span><span class="err"></span> <span class="nx">autocmd</span> <span class="nx">bufenter</span> * <span class="k">if</span> <span class="p">(</span><span class="nx">winnr</span><span class="p">(</span><span class="s2">&#34;$&#34;</span><span class="p">)</span> <span class="p">==</span> <span class="m">1</span> &amp;&amp; <span class="nx">exists</span><span class="p">(</span><span class="s2">&#34;b:NERDTree&#34;</span><span class="p">)</span> &amp;&amp; <span class="nx">b</span>:<span class="nx">NERDTree</span>.<span class="nx">isTabTree</span><span class="p">())</span> <span class="p">|</span> <span class="nx">q</span> <span class="p">|</span> <span class="k">endif</span><span class="err">
+</span><span class="err"></span><span class="c"> &#34; 打开vim时自动打开NERDTree</span><span class="err">
+</span><span class="err"></span> <span class="nx">autocmd</span> <span class="nx">vimenter</span> * <span class="nx">NERDTree</span><span class="err">
+</span><span class="err"></span><span class="c"> &#34;设定 NERDTree 视窗大小</span><span class="err">
+</span><span class="err"></span> <span class="k">let</span> <span class="nx">g</span>:<span class="nx">NERDTreeWinSize</span> <span class="p">=</span> <span class="m">25</span> <span class="err">
+</span></code></pre></div><p>常用快捷键：</p>
+<pre><code>ctrl w w 光标自动在左右侧窗口切换
+o        展开左侧某个目录，再按一下就是合并目录 
+t        在新 Tab 中打开选中文件/书签，并跳到新 Tab
+T        在新 Tab 中打开选中文件/书签，但不跳到新 Tab
+P        跳到根结点
+p        跳到父结点
+q        关闭 NerdTree 窗口
+</code></pre><h4 id="322-状态栏美化">3.2.2. 状态栏美化</h4>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="nx">Plug</span> <span class="s1">&#39;vim-airline/vim-airline&#39;</span><span class="err">
+</span><span class="err"></span><span class="nx">Plug</span> <span class="s1">&#39;vim-airline/vim-airline-themes&#39;</span><span class="err">
+</span></code></pre></div><h4 id="323-开屏美化">3.2.3. 开屏美化</h4>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="nx">Plug</span> <span class="s1">&#39;mhinz/vim-startify&#39;</span><span class="err">
+</span></code></pre></div><h4 id="324-go语言必备">3.2.4. go语言必备</h4>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="nx">Plug</span> <span class="s1">&#39;fatih/vim-go&#39;</span><span class="err">
+</span></code></pre></div><p>安装完vim-go之后，打开nvim 使用 <code>:GoInstallBinaries</code> 安装依赖包，需要配置在环境变量PATH配置GOBIN</p>
+<p>默认打开go文件，语法高亮是不全的，也没有像vscode 一样保存自动格式化，所以还需做简单配置：</p>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="c">&#34; vim-go</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_fmt_command</span> <span class="p">=</span> <span class="s1">&#39;goimports&#39;</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_autodetect_gopath</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; let g:go_bin_path = &#39;$GOBIN&#39;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_types</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_fields</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_functions</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_function_calls</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_extra_types</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_generate_tags</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Open :GoDeclsDir with ctrl-g</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">g</span><span class="p">&gt;</span> :<span class="nx">GoDeclsDir</span><span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="nx">imap</span> <span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">g</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">esc</span><span class="p">&gt;</span>:<span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">u</span><span class="p">&gt;</span><span class="nx">GoDeclsDir</span><span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nx">augroup</span> <span class="nx">go</span><span class="err">
+</span><span class="err"></span>  <span class="nx">autocmd</span><span class="p">!</span><span class="err">
+</span><span class="err"></span>  <span class="nx">autocmd</span> <span class="nx">BufNewFile</span><span class="p">,</span><span class="nx">BufRead</span> *.<span class="nx">go</span> <span class="nx">setlocal</span> <span class="nx">noexpandtab</span> <span class="nx">tabstop</span><span class="p">=</span><span class="m">4</span> <span class="nx">shiftwidth</span><span class="p">=</span><span class="m">4</span><span class="err">
+</span><span class="err"></span><span class="nx">augroup</span> <span class="nx">END</span><span class="err">
+</span></code></pre></div><p>这里参考vim-go 作者的vim配置，vim-go-tutorial，配置非常精简，非常值得借鉴学习。配置完成之后就可以使用vim愉快的编写go代码了。
+用的比较多的，gd 跳转到代码定义 &lt; C-i &gt; &lt; C-o &gt; 后退/前进，保存代码就会自动格式化。其他的使用方法看文档就行。</p>
+<h4 id="325-代码补全">3.2.5. 代码补全</h4>
+<p>依赖环境：nodejs</p>
+<pre><code>curl -sL install-node.now.sh/lts | bash
+curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
+</code></pre><p>代码补全插件</p>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="nx">Plug</span> <span class="s1">&#39;neoclide/coc.nvim&#39;</span><span class="p">,</span> {<span class="s1">&#39;do&#39;</span>: <span class="s1">&#39;yarn install --frozen-lockfile&#39;</span>}<span class="err">
+</span></code></pre></div><p>安装补全插件</p>
+<pre><code>CocInstall coc-go coc-json coc-snippets coc-yaml
+</code></pre><h2 id="4-最终配置">4. 最终配置</h2>
+<p><code>~/.config/nvim/init.vim</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="c">&#34;==============================================================================</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; vim 基础配置 </span><span class="err">
+</span><span class="err"></span><span class="c">&#34;==============================================================================</span><span class="err">
+</span><span class="err"></span><span class="c">&#34;显示行号</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">number</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;开启语法高亮</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">syntax</span><span class="p">=</span><span class="nx">on</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;设置以unix的格式保存文件&#34;</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">fileformat</span><span class="p">=</span><span class="nx">unix</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;设置table长度</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">tabstop</span><span class="p">=</span><span class="m">4</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;同上</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">shiftwidth</span><span class="p">=</span><span class="m">4</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;文件编码</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">fenc</span><span class="p">=</span><span class="nx">utf</span><span class="m">-8</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;启用鼠标</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">mouse</span><span class="p">=</span><span class="nx">a</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;突出显示当前行</span><span class="err">
+</span><span class="err"></span><span class="c">&#34;set cursorline</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;文件编码</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">encoding</span><span class="p">=</span><span class="nx">utf</span><span class="m">-8</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;自动缩进</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">autoindent</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">softtabstop</span><span class="p">=</span><span class="m">4</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;自动缩进所使用的空白长度指示</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">shiftwidth</span><span class="p">=</span><span class="m">4</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">expandtab</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;==============================================================================</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; vim plug </span><span class="err">
+</span><span class="err"></span><span class="c">&#34;==============================================================================</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nx">call</span> <span class="nx">plug</span>#<span class="nx">begin</span><span class="p">(</span><span class="s1">&#39;~/.vim/plugged&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">Plug</span> <span class="s1">&#39;scrooloose/nerdtree&#39;</span><span class="err">
+</span><span class="err"></span><span class="nx">Plug</span> <span class="s1">&#39;vim-airline/vim-airline&#39;</span><span class="err">
+</span><span class="err"></span><span class="nx">Plug</span> <span class="s1">&#39;vim-airline/vim-airline-themes&#39;</span><span class="err">
+</span><span class="err"></span><span class="nx">Plug</span> <span class="s1">&#39;mhinz/vim-startify&#39;</span><span class="err">
+</span><span class="err"></span><span class="nx">Plug</span> <span class="s1">&#39;fatih/vim-go&#39;</span><span class="err">
+</span><span class="err"></span><span class="nx">Plug</span> <span class="s1">&#39;neoclide/coc.nvim&#39;</span><span class="p">,</span> {<span class="s1">&#39;branch&#39;</span>: <span class="s1">&#39;release&#39;</span>}<span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nx">call</span> <span class="nx">plug</span>#<span class="nx">end</span><span class="p">()</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;==============================================================================</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; vim plug config </span><span class="err">
+</span><span class="err"></span><span class="c">&#34;==============================================================================</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">
+</span><span class="c">
+</span><span class="c">&#34;----------------------------------------------------------------------------</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; NERDTree config</span><span class="err">
+</span><span class="err"></span><span class="c">&#34;----------------------------------------------------------------------------</span><span class="err">
+</span><span class="err"></span><span class="c"> &#34; F2键快速调出和隐藏它</span><span class="err">
+</span><span class="err"></span> <span class="nx">map</span> <span class="p">&lt;</span><span class="nx">F2</span><span class="p">&gt;</span> :<span class="nx">NERDTreeToggle</span><span class="p">&lt;</span><span class="nx">CR</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c"> &#34; 关闭vim时，如果打开的文件除了NERDTree没有其他文件时，它自动关闭，减少多次按:q!</span><span class="err">
+</span><span class="err"></span> <span class="nx">autocmd</span> <span class="nx">bufenter</span> * <span class="k">if</span> <span class="p">(</span><span class="nx">winnr</span><span class="p">(</span><span class="s2">&#34;$&#34;</span><span class="p">)</span> <span class="p">==</span> <span class="m">1</span> &amp;&amp; <span class="nx">exists</span><span class="p">(</span><span class="s2">&#34;b:NERDTree&#34;</span><span class="p">)</span> &amp;&amp; <span class="nx">b</span>:<span class="nx">NERDTree</span>.<span class="nx">isTabTree</span><span class="p">())</span> <span class="p">|</span> <span class="nx">q</span> <span class="p">|</span> <span class="k">endif</span><span class="err">
+</span><span class="err"></span><span class="c"> &#34; 打开vim时自动打开NERDTree</span><span class="err">
+</span><span class="err"></span> <span class="nx">autocmd</span> <span class="nx">vimenter</span> * <span class="nx">NERDTree</span><span class="err">
+</span><span class="err"></span><span class="c"> &#34;设定 NERDTree 视窗大小</span><span class="err">
+</span><span class="err"></span> <span class="k">let</span> <span class="nx">g</span>:<span class="nx">NERDTreeWinSize</span> <span class="p">=</span> <span class="m">25</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34;----------------------------------------------------------------------------</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; vim-go config</span><span class="err">
+</span><span class="err"></span><span class="c">&#34;----------------------------------------------------------------------------</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_fmt_command</span> <span class="p">=</span> <span class="s1">&#39;goimports&#39;</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_autodetect_gopath</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; let g:go_bin_path = &#39;$GOBIN&#39;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_types</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_fields</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_functions</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_function_calls</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_extra_types</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">go_highlight_generate_tags</span> <span class="p">=</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Open :GoDeclsDir with ctrl-g</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">g</span><span class="p">&gt;</span> :<span class="nx">GoDeclsDir</span><span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="nx">imap</span> <span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">g</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">esc</span><span class="p">&gt;</span>:<span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">u</span><span class="p">&gt;</span><span class="nx">GoDeclsDir</span><span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nx">augroup</span> <span class="nx">go</span><span class="err">
+</span><span class="err"></span>  <span class="nx">autocmd</span><span class="p">!</span><span class="err">
+</span><span class="err"></span>  <span class="nx">autocmd</span> <span class="nx">BufNewFile</span><span class="p">,</span><span class="nx">BufRead</span> *.<span class="nx">go</span> <span class="nx">setlocal</span> <span class="nx">noexpandtab</span> <span class="nx">tabstop</span><span class="p">=</span><span class="m">4</span> <span class="nx">shiftwidth</span><span class="p">=</span><span class="m">4</span><span class="err">
+</span><span class="err"></span><span class="nx">augroup</span> <span class="nx">END</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">
+</span><span class="c">&#34;----------------------------------------------------------------------------</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; coc.vim config</span><span class="err">
+</span><span class="err"></span><span class="c">&#34;----------------------------------------------------------------------------</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; TextEdit might fail if hidden is not set.</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">hidden</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Some servers have issues with backup files, see #649.</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">nobackup</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">nowritebackup</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Give more space for displaying messages.</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">cmdheight</span><span class="p">=</span><span class="m">2</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; delays and poor user experience.</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">updatetime</span><span class="p">=</span><span class="m">300</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Don&#39;t pass messages to |ins-completion-menu|.</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">shortmess</span><span class="p">+=</span><span class="nx">c</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Always show the signcolumn, otherwise it would shift the text each time</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; diagnostics appear/become resolved.</span><span class="err">
+</span><span class="err"></span><span class="k">if</span> <span class="nx">has</span><span class="p">(</span><span class="s2">&#34;patch-8.1.1564&#34;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">  &#34; Recently vim can merge signcolumn and number column into one</span><span class="err">
+</span><span class="err"></span>  <span class="nx">set</span> <span class="nx">signcolumn</span><span class="p">=</span><span class="nx">number</span><span class="err">
+</span><span class="err"></span><span class="k">else</span><span class="err">
+</span><span class="err"></span>  <span class="nx">set</span> <span class="nx">signcolumn</span><span class="p">=</span><span class="nx">yes</span><span class="err">
+</span><span class="err"></span><span class="k">endif</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Use tab for trigger completion with characters ahead and navigate.</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; NOTE: Use command &#39;:verbose imap &lt;tab&gt;&#39; to make sure tab is not mapped by</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; other plugin before putting this into your config.</span><span class="err">
+</span><span class="err"></span><span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">expr</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">TAB</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span>      \ <span class="nx">pumvisible</span><span class="p">()</span> ? <span class="s2">&#34;\&lt;C-n&gt;&#34;</span> :<span class="err">
+</span><span class="err"></span>      \ <span class="p">&lt;</span><span class="nx">SID</span><span class="p">&gt;</span><span class="nx">check_back_space</span><span class="p">()</span> ? <span class="s2">&#34;\&lt;TAB&gt;&#34;</span> :<span class="err">
+</span><span class="err"></span>      \ <span class="nx">coc</span>#<span class="nx">refresh</span><span class="p">()</span><span class="err">
+</span><span class="err"></span><span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">expr</span><span class="p">&gt;&lt;</span><span class="nx">S</span><span class="p">-</span><span class="nx">TAB</span><span class="p">&gt;</span> <span class="nx">pumvisible</span><span class="p">()</span> ? <span class="s2">&#34;\&lt;C-p&gt;&#34;</span> : <span class="s2">&#34;\&lt;C-h&gt;&#34;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="k">function</span><span class="p">!</span> <span class="nx">s</span>:<span class="nx">check_back_space</span><span class="p">()</span> <span class="nx">abort</span><span class="err">
+</span><span class="err"></span>  <span class="k">let</span> <span class="nx">col</span> <span class="p">=</span> <span class="nx">col</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="p">-</span> <span class="m">1</span><span class="err">
+</span><span class="err"></span>  <span class="nx">return</span> <span class="p">!</span><span class="nx">col</span> <span class="p">||</span> <span class="nx">getline</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>[<span class="nx">col</span> <span class="p">-</span> <span class="m">1</span>]  <span class="p">=~</span># <span class="s1">&#39;\s&#39;</span><span class="err">
+</span><span class="err"></span><span class="k">endfunction</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Use &lt;c-space&gt; to trigger completion.</span><span class="err">
+</span><span class="err"></span><span class="k">if</span> <span class="nx">has</span><span class="p">(</span><span class="s1">&#39;nvim&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>  <span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">expr</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">c</span><span class="p">-</span><span class="nx">space</span><span class="p">&gt;</span> <span class="nx">coc</span>#<span class="nx">refresh</span><span class="p">()</span><span class="err">
+</span><span class="err"></span><span class="k">else</span><span class="err">
+</span><span class="err"></span>  <span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">expr</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">c</span><span class="p">-</span>@<span class="p">&gt;</span> <span class="nx">coc</span>#<span class="nx">refresh</span><span class="p">()</span><span class="err">
+</span><span class="err"></span><span class="k">endif</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Use &lt;cr&gt; to confirm completion, `&lt;C-g&gt;u` means break undo chain at current</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; position. Coc only does snippet and additional edit on confirm.</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; &lt;cr&gt; could be remapped by other vim plugin, try `:verbose imap &lt;CR&gt;`.</span><span class="err">
+</span><span class="err"></span><span class="k">if</span> <span class="nx">exists</span><span class="p">(</span><span class="s1">&#39;*complete_info&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>  <span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">expr</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span> <span class="nx">complete_info</span><span class="p">()</span>[<span class="s2">&#34;selected&#34;</span>] <span class="p">!=</span> <span class="s2">&#34;-1&#34;</span> ? <span class="s2">&#34;\&lt;C-y&gt;&#34;</span> : <span class="s2">&#34;\&lt;C-g&gt;u\&lt;CR&gt;&#34;</span><span class="err">
+</span><span class="err"></span><span class="k">else</span><span class="err">
+</span><span class="err"></span>  <span class="nx">inoremap</span> <span class="p">&lt;</span><span class="nx">expr</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span> <span class="nx">pumvisible</span><span class="p">()</span> ? <span class="s2">&#34;\&lt;C-y&gt;&#34;</span> : <span class="s2">&#34;\&lt;C-g&gt;u\&lt;CR&gt;&#34;</span><span class="err">
+</span><span class="err"></span><span class="k">endif</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Use `[g` and `]g` to navigate diagnostics</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;</span> [<span class="nx">g</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">diagnostic</span><span class="p">-</span><span class="nx">prev</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;</span> ]<span class="nx">g</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">diagnostic</span><span class="p">-</span><span class="nx">next</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; GoTo code navigation.</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;</span> <span class="nx">gd</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">definition</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;</span> <span class="nx">gy</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">type</span><span class="p">-</span><span class="nx">definition</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;</span> <span class="nx">gi</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">implementation</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;</span> <span class="nx">gr</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">references</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Use K to show documentation in preview window.</span><span class="err">
+</span><span class="err"></span><span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;</span> <span class="nx">K</span> :<span class="nx">call</span> <span class="p">&lt;</span><span class="nx">SID</span><span class="p">&gt;</span><span class="nx">show_documentation</span><span class="p">()&lt;</span><span class="nx">CR</span><span class="p">&gt;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="k">function</span><span class="p">!</span> <span class="nx">s</span>:<span class="nx">show_documentation</span><span class="p">()</span><span class="err">
+</span><span class="err"></span>  <span class="k">if</span> <span class="p">(</span><span class="nx">index</span><span class="p">(</span>[<span class="s1">&#39;vim&#39;</span><span class="p">,</span><span class="s1">&#39;help&#39;</span>]<span class="p">,</span> &amp;<span class="nx">filetype</span><span class="p">)</span> <span class="p">&gt;=</span> <span class="m">0</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>    <span class="nx">execute</span> <span class="s1">&#39;h &#39;</span>.<span class="nx">expand</span><span class="p">(</span><span class="s1">&#39;&lt;cword&gt;&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>  <span class="k">else</span><span class="err">
+</span><span class="err"></span>    <span class="nx">call</span> <span class="nx">CocAction</span><span class="p">(</span><span class="s1">&#39;doHover&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span>  <span class="k">endif</span><span class="err">
+</span><span class="err"></span><span class="k">endfunction</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Highlight the symbol and its references when holding the cursor.</span><span class="err">
+</span><span class="err"></span><span class="nx">autocmd</span> <span class="nx">CursorHold</span> * <span class="nx">silent</span> <span class="nx">call</span> <span class="nx">CocActionAsync</span><span class="p">(</span><span class="s1">&#39;highlight&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Symbol renaming.</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">leader</span><span class="p">&gt;</span><span class="nx">rn</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">rename</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Formatting selected code.</span><span class="err">
+</span><span class="err"></span><span class="nx">xmap</span> <span class="p">&lt;</span><span class="nx">leader</span><span class="p">&gt;</span><span class="nx">f</span>  <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">format</span><span class="p">-</span><span class="nx">selected</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">leader</span><span class="p">&gt;</span><span class="nx">f</span>  <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">format</span><span class="p">-</span><span class="nx">selected</span><span class="p">)</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="nx">augroup</span> <span class="nx">mygroup</span><span class="err">
+</span><span class="err"></span>  <span class="nx">autocmd</span><span class="p">!</span><span class="err">
+</span><span class="err"></span><span class="c">  &#34; Setup formatexpr specified filetype(s).</span><span class="err">
+</span><span class="err"></span>  <span class="nx">autocmd</span> <span class="nx">FileType</span> <span class="nx">typescript</span><span class="p">,</span><span class="nx">json</span> <span class="nx">setl</span> <span class="nx">formatexpr</span><span class="p">=</span><span class="nx">CocAction</span><span class="p">(</span><span class="s1">&#39;formatSelected&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">  &#34; Update signature help on jump placeholder.</span><span class="err">
+</span><span class="err"></span>  <span class="nx">autocmd</span> <span class="nx">User</span> <span class="nx">CocJumpPlaceholder</span> <span class="nx">call</span> <span class="nx">CocActionAsync</span><span class="p">(</span><span class="s1">&#39;showSignatureHelp&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">augroup</span> <span class="nx">end</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Applying codeAction to the selected region.</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Example: `&lt;leader&gt;aap` for current paragraph</span><span class="err">
+</span><span class="err"></span><span class="nx">xmap</span> <span class="p">&lt;</span><span class="nx">leader</span><span class="p">&gt;</span><span class="nx">a</span>  <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">codeaction</span><span class="p">-</span><span class="nx">selected</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">leader</span><span class="p">&gt;</span><span class="nx">a</span>  <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">codeaction</span><span class="p">-</span><span class="nx">selected</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Remap keys for applying codeAction to the current buffer.</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">leader</span><span class="p">&gt;</span><span class="nx">ac</span>  <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">codeaction</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Apply AutoFix to problem on the current line.</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">leader</span><span class="p">&gt;</span><span class="nx">qf</span>  <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">fix</span><span class="p">-</span><span class="nx">current</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Map function and class text objects</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; NOTE: Requires &#39;textDocument.documentSymbol&#39; support from the language server.</span><span class="err">
+</span><span class="err"></span><span class="nx">xmap</span> <span class="k">if</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">funcobj</span><span class="p">-</span><span class="nx">i</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">omap</span> <span class="k">if</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">funcobj</span><span class="p">-</span><span class="nx">i</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">xmap</span> <span class="nx">af</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">funcobj</span><span class="p">-</span><span class="nx">a</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">omap</span> <span class="nx">af</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">funcobj</span><span class="p">-</span><span class="nx">a</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">xmap</span> <span class="nx">ic</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">classobj</span><span class="p">-</span><span class="nx">i</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">omap</span> <span class="nx">ic</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">classobj</span><span class="p">-</span><span class="nx">i</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">xmap</span> <span class="nx">ac</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">classobj</span><span class="p">-</span><span class="nx">a</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">omap</span> <span class="nx">ac</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">classobj</span><span class="p">-</span><span class="nx">a</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Use CTRL-S for selections ranges.</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Requires &#39;textDocument/selectionRange&#39; support of LS, ex: coc-tsserver</span><span class="err">
+</span><span class="err"></span><span class="nx">nmap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">s</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">range</span><span class="p">-</span><span class="nx">select</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="nx">xmap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">s</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">Plug</span><span class="p">&gt;(</span><span class="nx">coc</span><span class="p">-</span><span class="nx">range</span><span class="p">-</span><span class="nx">select</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Add `:Format` command to format current buffer.</span><span class="err">
+</span><span class="err"></span><span class="nx">command</span><span class="p">!</span> <span class="p">-</span><span class="nx">nargs</span><span class="p">=</span><span class="m">0</span> <span class="nx">Format</span> :<span class="nx">call</span> <span class="nx">CocAction</span><span class="p">(</span><span class="s1">&#39;format&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Add `:Fold` command to fold current buffer.</span><span class="err">
+</span><span class="err"></span><span class="nx">command</span><span class="p">!</span> <span class="p">-</span><span class="nx">nargs</span><span class="p">=</span>? <span class="nx">Fold</span> :<span class="nx">call</span>     <span class="nx">CocAction</span><span class="p">(</span><span class="s1">&#39;fold&#39;</span><span class="p">,</span> <span class="p">&lt;</span><span class="nx">f</span><span class="p">-</span><span class="nx">args</span><span class="p">&gt;)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Add `:OR` command for organize imports of the current buffer.</span><span class="err">
+</span><span class="err"></span><span class="nx">command</span><span class="p">!</span> <span class="p">-</span><span class="nx">nargs</span><span class="p">=</span><span class="m">0</span> <span class="nx">OR</span>   :<span class="nx">call</span>     <span class="nx">CocAction</span><span class="p">(</span><span class="s1">&#39;runCommand&#39;</span><span class="p">,</span> <span class="s1">&#39;editor.action.organizeImport&#39;</span><span class="p">)</span><span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Add (Neo)Vim&#39;s native statusline support.</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; NOTE: Please see `:h coc-status` for integrations with external plugins that</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; provide custom statusline: lightline.vim, vim-airline.</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">statusline</span>^<span class="p">=</span>%{<span class="nx">coc</span>#<span class="nx">status</span><span class="p">()</span>}%{<span class="nx">get</span><span class="p">(</span><span class="nx">b</span>:<span class="p">,</span><span class="s1">&#39;coc_current_function&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>}<span class="err">
+</span><span class="err"></span><span class="c">
+</span><span class="c">&#34; Mappings for CoCList</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Show all diagnostics.</span><span class="err">
+</span><span class="err"></span><span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">nowait</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">space</span><span class="p">&gt;</span><span class="nx">a</span>  :<span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">u</span><span class="p">&gt;</span><span class="nx">CocList</span> <span class="nx">diagnostics</span><span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Manage extensions.</span><span class="err">
+</span><span class="err"></span><span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">nowait</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">space</span><span class="p">&gt;</span><span class="nx">e</span>  :<span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">u</span><span class="p">&gt;</span><span class="nx">CocList</span> <span class="nx">extensions</span><span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Show commands.</span><span class="err">
+</span><span class="err"></span><span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">nowait</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">space</span><span class="p">&gt;</span><span class="nx">c</span>  :<span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">u</span><span class="p">&gt;</span><span class="nx">CocList</span> <span class="nx">commands</span><span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Find symbol of current document.</span><span class="err">
+</span><span class="err"></span><span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">nowait</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">space</span><span class="p">&gt;</span><span class="nx">o</span>  :<span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">u</span><span class="p">&gt;</span><span class="nx">CocList</span> <span class="nx">outline</span><span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Search workspace symbols.</span><span class="err">
+</span><span class="err"></span><span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">nowait</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">space</span><span class="p">&gt;</span><span class="nx">s</span>  :<span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">u</span><span class="p">&gt;</span><span class="nx">CocList</span> <span class="p">-</span><span class="nx">I</span> <span class="nx">symbols</span><span class="p">&lt;</span><span class="nx">cr</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Do default action for next item.</span><span class="err">
+</span><span class="err"></span><span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">nowait</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">space</span><span class="p">&gt;</span><span class="nx">j</span>  :<span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">u</span><span class="p">&gt;</span><span class="nx">CocNext</span><span class="p">&lt;</span><span class="nx">CR</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Do default action for previous item.</span><span class="err">
+</span><span class="err"></span><span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">nowait</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">space</span><span class="p">&gt;</span><span class="nx">k</span>  :<span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">u</span><span class="p">&gt;</span><span class="nx">CocPrev</span><span class="p">&lt;</span><span class="nx">CR</span><span class="p">&gt;</span><span class="err">
+</span><span class="err"></span><span class="c">&#34; Resume latest coc list.</span><span class="err">
+</span><span class="err"></span><span class="nx">nnoremap</span> <span class="p">&lt;</span><span class="nx">silent</span><span class="p">&gt;&lt;</span><span class="nx">nowait</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nx">space</span><span class="p">&gt;</span><span class="nx">p</span>  :<span class="p">&lt;</span><span class="nx">C</span><span class="p">-</span><span class="nx">u</span><span class="p">&gt;</span><span class="nx">CocListResume</span><span class="p">&lt;</span><span class="nx">CR</span><span class="p">&gt;</span><span class="err">
+</span></code></pre></div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-08-20</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/posts/linux/vim%E6%89%93%E9%80%A0golang%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang/">golang</a>,&nbsp;<a href="/tags/vim/">vim</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/golang/golang%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%A7%A3%E6%9E%90%E4%B9%8Bflag/" class="prev" rel="prev" title="Golang命令行解析之flag和pflag"><i class="fas fa-angle-left fa-fw"></i>Golang命令行解析之flag和pflag</a>
+            <a href="/posts/k8s/k8s%E9%83%A8%E7%BD%B2/" class="next" rel="next" title="K8S部署">K8S部署<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.69.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://pokitpeng.github.io/about/" target="_blank">Pokit Peng</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

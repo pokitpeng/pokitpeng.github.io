@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Golang中slice底层原理理解 - Pokit Blog</title><meta name="Description" content=""><meta property="og:title" content="Golang中slice底层原理理解" />
+<meta property="og:description" content="1. 前言 我们知道数组在初始化的时候会声明数组长度，使用的时候难免会有不方便的地方，于是就有了slice，所谓的切片其实就是动态数组，本质上是基" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pokitpeng.github.io/posts/golang/golang%E4%B8%ADslice%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E7%90%86%E8%A7%A3/" />
+<meta property="og:image" content="https://pokitpeng.github.io"/>
+<meta property="article:published_time" content="2020-10-28T15:53:43+08:00" />
+<meta property="article:modified_time" content="2020-10-28T15:53:43+08:00" /><meta property="og:site_name" content="Pokit Blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://pokitpeng.github.io"/>
+
+<meta name="twitter:title" content="Golang中slice底层原理理解"/>
+<meta name="twitter:description" content="1. 前言 我们知道数组在初始化的时候会声明数组长度，使用的时候难免会有不方便的地方，于是就有了slice，所谓的切片其实就是动态数组，本质上是基"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/image/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://pokitpeng.github.io/posts/golang/golang%E4%B8%ADslice%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E7%90%86%E8%A7%A3/" /><link rel="prev" href="https://pokitpeng.github.io/posts/golang/golang%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" /><link rel="next" href="https://pokitpeng.github.io/posts/golang/golang%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BAgc%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Golang中slice底层原理理解",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/pokitpeng.github.io\/posts\/golang\/golang%E4%B8%ADslice%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E7%90%86%E8%A7%A3\/"
+        },"genre": "posts","keywords": "golang","wordcount":  1293 ,
+        "url": "https:\/\/pokitpeng.github.io\/posts\/golang\/golang%E4%B8%ADslice%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E7%90%86%E8%A7%A3\/","datePublished": "2020-10-28T15:53:43+08:00","dateModified": "2020-10-28T15:53:43+08:00","publisher": {
+            "@type": "Organization",
+            "name": "Pokit Peng"},"author": {
+                "@type": "Person",
+                "name": "Pokit Peng"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Pokit Blog">Pokit Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/posts/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Pokit Blog">Pokit Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/posts/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Golang中slice底层原理理解</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://pokitpeng.github.io/about/" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Pokit Peng</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/golang/"><i class="far fa-folder fa-fw"></i>golang</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-10-28">2020-10-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1293 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-前言">1. 前言</a></li>
+    <li><a href="#2-slice-结构">2. slice 结构</a></li>
+    <li><a href="#3-初始化">3. 初始化</a></li>
+    <li><a href="#4-扩容">4. 扩容</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="1-前言">1. 前言</h2>
+<p>我们知道数组在初始化的时候会声明数组长度，使用的时候难免会有不方便的地方，于是就有了<code>slice</code>，所谓的切片其实就是动态数组，本质上是基于数组实现的，主要特点是定义完一个slice变量之后，不需要为它的容量而担心。</p>
+<h2 id="2-slice-结构">2. slice 结构</h2>
+<p>slice源码：<a href="https://golang.org/src/runtime/slice.go?h=type%20slice%20struct#L13" target="_blank" rel="noopener noreffer">https://golang.org/src/runtime/slice.go?h=type%20slice%20struct#L13</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">slice</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">array</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span> <span class="c1">// 用来存储实际数据的数组指针，指向一块连续的内存
+</span><span class="c1"></span>	<span class="nx">len</span>   <span class="kt">int</span> <span class="c1">// 切片中元素的数量
+</span><span class="c1"></span>	<span class="nx">cap</span>   <span class="kt">int</span> <span class="c1">// 切片的容量
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>可以看到slice是由一个指针，len和cap组成，其中指针指向的是一个array。</p>
+<h2 id="3-初始化">3. 初始化</h2>
+<p>Go 语言中的切片有以下几种初始化的方式：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="nx">or</span> <span class="nx">slice</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1">// 使用下标截取
+</span><span class="c1"></span><span class="nx">slice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// make关键字初始化一个空切片
+</span><span class="c1"></span><span class="nx">slice</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span> <span class="c1">// 字面量初始化一个空切片
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">slice</span> <span class="p">[]</span><span class="kt">int</span> <span class="c1">// 声明一个nil切片
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">slice</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}</span> <span class="c1">// 声明并赋值
+</span></code></pre></div><p>这里注意一下，其中make关键字初始化一个空切片<code>slice := make([]int, 0)</code>和字面量初始化一个空切片<code>slice := []int{}</code>两种方式几乎是等价的，他们底层数组为空，但是底层数组指针非空。对于<code>var slice []int</code>声明的切片，指针为<code>nil</code>，不会分配内存空间。但是，不管是空切片还是nil切片，对其调用内置函数<code>append()</code>、<code>len</code>和<code>cap</code>的效果都是一样的，感受不到任何区别。</p>
+<h2 id="4-扩容">4. 扩容</h2>
+<p>切片扩容有以下两个规则：</p>
+<ul>
+<li>如果切片的容量小于1024个元素，那么扩容的时候slice的cap就翻番，乘以2；一旦元素个数超过1024个元素，增长因子就变成1.25，即每次增加原来容量的四分之一。</li>
+<li>如果扩容之后，还没有触及原数组的容量，那么，切片中的指针指向的位置，就还是原数组，如果扩容之后，超过了原数组的容量，那么，Go就会开辟一块新的内存，把原来的值拷贝过来，这种情况丝毫不会影响到原数组。</li>
+</ul>
+<p>我们来看下几个示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// example1
+</span><span class="c1"></span><span class="nx">s1</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+<span class="nx">s2</span> <span class="o">:=</span> <span class="nx">s1</span>
+<span class="nx">s2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">10</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s1</span><span class="p">)</span> <span class="c1">// [10 2 3]
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s2</span><span class="p">)</span> <span class="c1">// [10 2 3] 
+</span></code></pre></div><p>example1解析：切片是引用类型，传递的都是原始值的引用，会改变原始值</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// example2
+</span><span class="c1"></span><span class="nx">s1</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+<span class="nx">s2</span> <span class="o">:=</span> <span class="nx">s1</span>
+<span class="nx">s2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">10</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s1</span><span class="p">)</span> <span class="c1">// [1 2 3]
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s2</span><span class="p">)</span> <span class="c1">// [10 2 3] 
+</span></code></pre></div><p>example2解析：数组是值类型，传递的是原始值的拷贝，不会改变原始值</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// example3
+</span><span class="c1"></span><span class="nx">s1</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+<span class="nx">s2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nb">copy</span><span class="p">(</span><span class="nx">s2</span><span class="p">,</span> <span class="nx">s1</span><span class="p">)</span>
+<span class="nx">s2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">10</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s1</span><span class="p">)</span> <span class="c1">// [1 2 3]
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s2</span><span class="p">)</span> <span class="c1">// [10 2 3] 
+</span></code></pre></div><p>example3解析：<code>copy</code>会进行深拷贝，将s1拷贝给s2，因此s2的改变不会改变原始值</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// example4
+</span><span class="c1"></span><span class="nx">s1</span><span class="o">:=</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}</span>
+<span class="nx">s2</span><span class="o">:=</span><span class="nx">s1</span><span class="p">[:]</span>
+<span class="nx">s2</span><span class="p">[</span><span class="mi">0</span><span class="p">]=</span><span class="mi">10</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s1</span><span class="p">)</span> <span class="c1">// [10 2 3]
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s2</span><span class="p">)</span> <span class="c1">// [10 2 3]
+</span></code></pre></div><p>example4解析：新的切片s2底层数组是s1，改变s2的值会改变原始值</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// example5
+</span><span class="c1"></span><span class="nx">s1</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+<span class="nx">s2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nx">s2</span> <span class="p">=</span> <span class="nx">s1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>        <span class="c1">// s2 长度为3，容量为4
+</span><span class="c1"></span><span class="nx">s2</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">// 没有超出底层数组容量
+</span><span class="c1"></span><span class="nx">s2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">10</span>          <span class="c1">// 会改变底层数组
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s1</span><span class="p">)</span>     <span class="c1">// [10 2 3 10 5]
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s2</span><span class="p">)</span>     <span class="c1">// [10 2 3 10]
+</span><span class="c1"></span>
+<span class="c1">// ---------------------------------------
+</span><span class="c1"></span><span class="nx">s1</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+<span class="nx">s2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nx">s2</span> <span class="p">=</span> <span class="nx">s1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>                <span class="c1">// s2 长度为3，容量为4
+</span><span class="c1"></span><span class="nx">s2</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span> <span class="c1">// 超出底层数组容量，s2发生拷贝，此时s2是一个全新切片
+</span><span class="c1"></span><span class="nx">s2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">10</span>                  <span class="c1">// 不会改变底层数组
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s1</span><span class="p">)</span>             <span class="c1">// [1 2 3 4 5]
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s2</span><span class="p">)</span>             <span class="c1">// [10 2 3 10 20 30]
+</span><span class="c1"></span>
+</code></pre></div><p>example5解析：只要知道超出底层数组容量的切片会拷贝出一个全新的切片，不影响原始底层数组。</p>
+<p>以上，就是对go语言中切片的一些经验总结。</p>
+<p><strong>参考</strong></p>
+<p><a href="https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-array-and-slice/#%e4%bd%bf%e7%94%a8%e4%b8%8b%e6%a0%87" target="_blank" rel="noopener noreffer">Go 语言切片的实现原理 | Go 语言设计与实现 (draveness.me)</a></p>
+<p><a href="https://i6448038.github.io/2018/08/11/array-and-slice-principle/" target="_blank" rel="noopener noreffer">快速理解Go数组和切片的内部实现原理 - 菜刚RyuGou的博客 (i6448038.github.io)</a></p>
+<p><a href="https://newt0n.github.io/2016/11/07/%e5%a6%82%e4%bd%95%e9%81%bf%e5%bc%80-Go-%e4%b8%ad%e7%9a%84%e5%90%84%e7%a7%8d%e9%99%b7%e9%98%b1/" target="_blank" rel="noopener noreffer">如何避开 Go 中的各种陷阱 · NewtonIO (newt0n.github.io)</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-10-28</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/posts/golang/golang%E4%B8%ADslice%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E7%90%86%E8%A7%A3/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang/">golang</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/golang/golang%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" class="prev" rel="prev" title="Golang内存逃逸分析"><i class="fas fa-angle-left fa-fw"></i>Golang内存逃逸分析</a>
+            <a href="/posts/golang/golang%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BAgc%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81/" class="next" rel="next" title="Golang如何写出gc友好的代码">Golang如何写出gc友好的代码<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.69.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://pokitpeng.github.io/about/" target="_blank">Pokit Peng</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
