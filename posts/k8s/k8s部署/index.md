@@ -117,8 +117,24 @@ yum install -y docker-ce-20.10.5-3.el7
 sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <<-'EOF'
 {
-  "registry-mirrors": ["https://hxzfq25s.mirror.aliyuncs.com"],
-  "exec-opts": ["native.cgroupdriver=systemd"]
+    "registry-mirrors": ["https://hxzfq25s.mirror.aliyuncs.com"],
+    "exec-opts": ["native.cgroupdriver=systemd"],
+    "data-root": "/var/lib/docker",
+    "bridge": "none",
+    "iptables": false,
+    "default-ulimits": {
+        "core": {
+            "Name": "core",
+            "Hard": 0,
+            "Soft": 0
+        }
+    },
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "30m",
+        "max-file": "5",
+        "labels": "production_status"
+    }
 }
 EOF
 sudo systemctl daemon-reload
