@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/pokitpeng.github.io\/posts\/k8s\/k8s%E9%83%A8%E7%BD%B2\/"
-        },"genre": "posts","keywords": "k8s","wordcount":  1306 ,
+        },"genre": "posts","keywords": "k8s","wordcount":  1290 ,
         "url": "https:\/\/pokitpeng.github.io\/posts\/k8s\/k8s%E9%83%A8%E7%BD%B2\/","datePublished": "2020-09-05T09:07:40+08:00","dateModified": "2020-09-05T09:07:40+08:00","publisher": {
             "@type": "Organization",
             "name": "Pokit Peng"},"author": {
@@ -104,7 +104,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">K8S部署</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="https://pokitpeng.github.io/about/" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>Pokit Peng</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/k8s/"><i class="far fa-folder fa-fw"></i>k8s</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-09-05">2020-09-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1306 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-09-05">2020-09-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1290 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -234,15 +234,6 @@ sudo tee /etc/docker/daemon.json <span class="s">&lt;&lt;-&#39;EOF&#39;
 </span><span class="s">    &#34;registry-mirrors&#34;: [&#34;https://hxzfq25s.mirror.aliyuncs.com&#34;],
 </span><span class="s">    &#34;exec-opts&#34;: [&#34;native.cgroupdriver=systemd&#34;],
 </span><span class="s">    &#34;data-root&#34;: &#34;/var/lib/docker&#34;,
-</span><span class="s">    &#34;bridge&#34;: &#34;none&#34;,
-</span><span class="s">    &#34;iptables&#34;: false,
-</span><span class="s">    &#34;default-ulimits&#34;: {
-</span><span class="s">        &#34;core&#34;: {
-</span><span class="s">            &#34;Name&#34;: &#34;core&#34;,
-</span><span class="s">            &#34;Hard&#34;: 0,
-</span><span class="s">            &#34;Soft&#34;: 0
-</span><span class="s">        }
-</span><span class="s">    },
 </span><span class="s">    &#34;log-driver&#34;: &#34;json-file&#34;,
 </span><span class="s">    &#34;log-opts&#34;: {
 </span><span class="s">        &#34;max-size&#34;: &#34;30m&#34;,
