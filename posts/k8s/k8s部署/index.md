@@ -15,7 +15,7 @@
 ### 2.1. 设置hostname，同步时间
 
 ```bash
-hostnamectl --static set-hostname n66
+hostnamectl --static set-hostname <host_name>
 
 date -s '2020-09-04 21:54:00' 
 
@@ -211,7 +211,7 @@ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 查看当前taint情况
 
 ```bash
-kubectl describe node n66
+kubectl describe node $(hostname)
 
 # Taints默认为node-role.kubernetes.io/master:NoSchedule
 # 表示不允许被调度
@@ -220,13 +220,13 @@ kubectl describe node n66
 删除taint
 
 ```bash
-kubectl taint node n66 node-role.kubernetes.io/master-
+kubectl taint node $(hostname) node-role.kubernetes.io/master-
 ```
 
 再次查看
 
 ```bash
-kubectl describe node n66
+kubectl describe node $(hostname)
 
 # Taints为<none>
 # 此时节点可被调度
@@ -240,7 +240,7 @@ kubectl describe node n66
 恢复默认状态
 
 ```bash
-kubectl taint nodes n66 node-role.kubernetes.io/master=:NoSchedule
+kubectl taint nodes $(hostname) node-role.kubernetes.io/master=:NoSchedule
 ```
 
 ### 3.8. 创建一个测试程序

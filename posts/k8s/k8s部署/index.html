@@ -159,7 +159,7 @@
 </ul>
 <h2 id="2-初始化工作">2. 初始化工作</h2>
 <h3 id="21-设置hostname同步时间">2.1. 设置hostname，同步时间</h3>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">hostnamectl --static set-hostname n66
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">hostnamectl --static set-hostname &lt;host_name&gt;
 
 date -s <span class="s1">&#39;2020-09-04 21:54:00&#39;</span> 
 
@@ -298,14 +298,14 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documen
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 </code></pre></div><h3 id="37-开启单机模式">3.7. 开启单机模式</h3>
 <p>查看当前taint情况</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl describe node n66
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl describe node <span class="k">$(</span>hostname<span class="k">)</span>
 
 <span class="c1"># Taints默认为node-role.kubernetes.io/master:NoSchedule</span>
 <span class="c1"># 表示不允许被调度</span>
 </code></pre></div><p>删除taint</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl taint node n66 node-role.kubernetes.io/master-
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl taint node <span class="k">$(</span>hostname<span class="k">)</span> node-role.kubernetes.io/master-
 </code></pre></div><p>再次查看</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl describe node n66
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl describe node <span class="k">$(</span>hostname<span class="k">)</span>
 
 <span class="c1"># Taints为&lt;none&gt;</span>
 <span class="c1"># 此时节点可被调度</span>
@@ -315,7 +315,7 @@ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 <span class="c1"># PreferNoSchedule: 尽量不要调度</span>
 <span class="c1"># NoExecute: 不仅不会调度, 还会驱逐Node上已有的Pod</span>
 </code></pre></div><p>恢复默认状态</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl taint nodes n66 node-role.kubernetes.io/master<span class="o">=</span>:NoSchedule
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl taint nodes <span class="k">$(</span>hostname<span class="k">)</span> node-role.kubernetes.io/master<span class="o">=</span>:NoSchedule
 </code></pre></div><h3 id="38-创建一个测试程序">3.8. 创建一个测试程序</h3>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl apply -f https://k8s.io/examples/application/deployment.yaml
 </code></pre></div><h3 id="39-查看状态">3.9. 查看状态</h3>
