@@ -391,7 +391,23 @@
     </footer>
   </article>
         </div>
-        
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var gitalk = new Gitalk({
+        id: '2020-12-22 21:48:42 \u002b0800 CST',
+        title: 'Golang高效字符串连接',
+        clientID: '277444d3e7843881572c',
+        clientSecret: 'e6b8adb3c1cd769ef10d978b66df4be436654208',
+        repo: 'pokitpeng.github.io',
+        owner: 'pokitpeng',
+        admin: ['pokitpeng'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
 
   
 
