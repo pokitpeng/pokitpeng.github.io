@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Peng blog site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 22 Dec 2020 21:48:42 +0800</lastBuildDate><atom:link href="http://pokitpeng.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 26 Dec 2020 22:21:01 +0800</lastBuildDate><atom:link href="http://pokitpeng.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Golang Fmt包详解</title>
+      <link>http://pokitpeng.github.io/post/golang-fmt%E5%8C%85%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Sat, 26 Dec 2020 22:21:01 +0800</pubDate>
+      
+      <guid>http://pokitpeng.github.io/post/golang-fmt%E5%8C%85%E8%AF%A6%E8%A7%A3/</guid>
+      <description>fmt 包是 Go 语言的标准库之一，提供了多种格式化和输出文本的函数。下面是几种常见函数使用方式。 Printf Printf可以说是使用最广泛的函数，没有之一。官</description>
+    </item>
+    
     <item>
       <title>Golang高效字符串连接</title>
       <link>http://pokitpeng.github.io/post/golang%E9%AB%98%E6%95%88%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%9E%E6%8E%A5/</link>

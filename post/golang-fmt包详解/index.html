@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Golang Fmt包详解 - Peng blog site</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="peng" /><meta name="description" content="fmt 包是 Go 语言的标准库之一，提供了多种格式化和输出文本的函数。下面是几种常见函数使用方式。 Printf Printf可以说是使用最广泛的函数，没有之一。官" /><meta name="keywords" content="Hugo, blog, golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.108.0 with theme even" />
+
+
+<link rel="canonical" href="http://pokitpeng.github.io/post/golang-fmt%E5%8C%85%E8%AF%A6%E8%A7%A3/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Golang Fmt包详解" />
+<meta property="og:description" content="fmt 包是 Go 语言的标准库之一，提供了多种格式化和输出文本的函数。下面是几种常见函数使用方式。 Printf Printf可以说是使用最广泛的函数，没有之一。官" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://pokitpeng.github.io/post/golang-fmt%E5%8C%85%E8%AF%A6%E8%A7%A3/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-12-26T22:21:01+08:00" />
+<meta property="article:modified_time" content="2020-12-26T22:21:01+08:00" />
+<meta itemprop="name" content="Golang Fmt包详解">
+<meta itemprop="description" content="fmt 包是 Go 语言的标准库之一，提供了多种格式化和输出文本的函数。下面是几种常见函数使用方式。 Printf Printf可以说是使用最广泛的函数，没有之一。官"><meta itemprop="datePublished" content="2020-12-26T22:21:01+08:00" />
+<meta itemprop="dateModified" content="2020-12-26T22:21:01+08:00" />
+<meta itemprop="wordCount" content="1308">
+<meta itemprop="keywords" content="go," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Golang Fmt包详解"/>
+<meta name="twitter:description" content="fmt 包是 Go 语言的标准库之一，提供了多种格式化和输出文本的函数。下面是几种常见函数使用方式。 Printf Printf可以说是使用最广泛的函数，没有之一。官"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Peng</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Peng</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Golang Fmt包详解</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-12-26 </span>
+        
+          <span class="more-meta"> 约 1308 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#printf">Printf</a>
+      <ul>
+        <li><a href="#浮点型小数点保留">浮点型小数点保留</a></li>
+        <li><a href="#格式化对齐">格式化对齐</a></li>
+      </ul>
+    </li>
+    <li><a href="#fprintf">Fprintf</a></li>
+    <li><a href="#sprintf">Sprintf</a></li>
+    <li><a href="#scanf">Scanf</a></li>
+    <li><a href="#fscanf">Fscanf</a></li>
+    <li><a href="#stringer">Stringer</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+  <div class="post-outdated">
+    <div class="warn">
+      <p>【注意】最后更新于 <span class="timeago" datetime="2020-12-26T22:21:01" title="December 26, 2020">December 26, 2020</span>，文中内容可能已过时，请谨慎使用。</p>
+    </div>
+  </div>
+    <div class="post-content">
+      <p><code>fmt</code> 包是 Go 语言的标准库之一，提供了多种格式化和输出文本的函数。下面是几种常见函数使用方式。</p>
+<h2 id="printf">Printf</h2>
+<p><code>Printf</code>可以说是使用最广泛的函数，没有之一。<a href="https://pkg.go.dev/fmt">官方文档入口</a>，下面列举常见用法。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//整型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">a</span> <span class="o">:=</span> <span class="mi">15</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;a = %b\n&#34;</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span> <span class="c1">//a = 1111
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%%\n&#34;</span><span class="p">)</span>        <span class="c1">//只输出一个%
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//字符
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ch</span> <span class="o">:=</span> <span class="sc">&#39;a&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;ch = %c, %c\n&#34;</span><span class="p">,</span> <span class="nx">ch</span><span class="p">,</span> <span class="mi">97</span><span class="p">)</span> <span class="c1">//a, a
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//浮点型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">f</span> <span class="o">:=</span> <span class="mf">3.14</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;f = %f, %g\n&#34;</span><span class="p">,</span> <span class="nx">f</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span> <span class="c1">//f = 3.140000, 3.14
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;f type = %T\n&#34;</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span>   <span class="c1">//f type = float64
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//复数类型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">v</span> <span class="o">:=</span> <span class="nb">complex</span><span class="p">(</span><span class="mf">3.2</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;v = %f, %g\n&#34;</span><span class="p">,</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span> <span class="c1">//v = (3.200000+12.000000i), (3.2+12i)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;v type = %T\n&#34;</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>   <span class="c1">//v type = complex128
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//布尔类型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%t, %t\n&#34;</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="c1">//true, false
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//字符串
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">str</span> <span class="o">:=</span> <span class="s">&#34;hello go&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;str = %s\n&#34;</span><span class="p">,</span> <span class="nx">str</span><span class="p">)</span> <span class="c1">//str = hello go
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="浮点型小数点保留">浮点型小数点保留</h3>
+<p>要保留两位小数，可以使用 <code>%.2f</code> 这样的格式说明符，2表示要保留的小数点位数。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%.2f\n&#34;</span><span class="p">,</span> <span class="mf">3.14159</span><span class="p">)</span>  <span class="c1">// 输出 3.14
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以使用 Go 语言的内置函数 <code>math.Round</code> 来四舍五入浮点数。例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;math&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">x</span> <span class="o">:=</span> <span class="mf">3.14159</span>
+</span></span><span class="line"><span class="cl"><span class="nx">rounded</span> <span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nf">Round</span><span class="p">(</span><span class="nx">x</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">rounded</span><span class="p">)</span>  <span class="c1">// 输出 3.14
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果只想保留整数部分，可以使用 <code>math.Trunc</code> 函数来截断小数部分：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">truncated</span> <span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nf">Trunc</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">truncated</span><span class="p">)</span>  <span class="c1">// 输出 3
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="格式化对齐">格式化对齐</h3>
+<p>格式化对齐需要在<code>%</code>符号后面指定要对齐的长度。使用 <code>-</code> 字符表示左对齐。例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%-10s %s\n&#34;</span><span class="p">,</span> <span class="s">&#34;Apple&#34;</span><span class="p">,</span> <span class="s">&#34;100&#34;</span><span class="p">)</span>  <span class="c1">// 左对齐，输出 &#34;Apple      100&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%10s %s\n&#34;</span><span class="p">,</span> <span class="s">&#34;Apple&#34;</span><span class="p">,</span> <span class="s">&#34;100&#34;</span><span class="p">)</span>  <span class="c1">// 右对齐，输出 &#34;     Apple 100&#34;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果要输出浮点数，一般还需要指定小数位数。例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%-10s %10.2f\n&#34;</span><span class="p">,</span> <span class="s">&#34;Apple&#34;</span><span class="p">,</span> <span class="mf">3.14159</span><span class="p">)</span>  <span class="c1">// 左对齐，输出 &#34;Apple          3.14&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%10s %-10.2f\n&#34;</span><span class="p">,</span> <span class="s">&#34;Apple&#34;</span><span class="p">,</span> <span class="mf">3.14159</span><span class="p">)</span>  <span class="c1">// 右对齐，输出 &#34;     Apple 3.14     &#34;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="fprintf">Fprintf</h2>
+<p><code>fmt</code> 包中的 <code>Fprintf</code> 函数可以将文本输出到指定的输出流中。它的用法类似于 <code>Printf</code> 函数，但是需要提供一个 <code>io.Writer</code> 类型的参数，用于指定输出流。</p>
+<p>例如，你可以使用 <code>Fprintf</code> 函数将文本输出到标准输出中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Fprintf</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdout</span><span class="p">,</span> <span class="s">&#34;Hello, %s!&#34;</span><span class="p">,</span> <span class="s">&#34;world&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以使用 <code>Fprintf</code>函数将文本输出到文件中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">file</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="s">&#34;output.txt&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">defer</span> <span class="nx">file</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Fprintf</span><span class="p">(</span><span class="nx">file</span><span class="p">,</span> <span class="s">&#34;Hello, %s!&#34;</span><span class="p">,</span> <span class="s">&#34;world&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>还可以使用 <code>Fprintf</code> 函数将文本输出到网络连接中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">conn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">net</span><span class="p">.</span><span class="nf">Dial</span><span class="p">(</span><span class="s">&#34;tcp&#34;</span><span class="p">,</span> <span class="s">&#34;localhost:8080&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">defer</span> <span class="nx">conn</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Fprintf</span><span class="p">(</span><span class="nx">conn</span><span class="p">,</span> <span class="s">&#34;Hello, %s!&#34;</span><span class="p">,</span> <span class="s">&#34;world&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="sprintf">Sprintf</h2>
+<p><code>fmt</code> 包中的 <code>Sprintf</code> 函数可以将文本格式化为字符串。它的用法类似于 <code>Printf</code> 函数，但是会将输出作为字符串返回。</p>
+<p>你可以使用 <code>Sprintf</code> 函数将数字格式化为字符串：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">s</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%d&#34;</span><span class="p">,</span> <span class="mi">123</span><span class="p">)</span>  <span class="c1">// s 的值为 &#34;123&#34;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="scanf">Scanf</h2>
+<p><code>fmt</code> 包中的 <code>Scanf</code> 函数可以从标准输入中读取文本。它接受一个格式字符串和一个变量的列表，根据格式字符串将输入值转换为变量。</p>
+<p>你可以使用 <code>Scanf</code> 函数读取一个字符串：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;Enter a string: &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">s</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Scanf</span><span class="p">(</span><span class="s">&#34;%s\n&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;You entered:&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以使用 <code>Scanf</code> 函数读取多个值：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;Enter an integer and a float: &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">i</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">f</span> <span class="kt">float64</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Scanf</span><span class="p">(</span><span class="s">&#34;%d %f\n&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">i</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">f</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;You entered:&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>请注意，<code>Scanf</code> 函数会按照格式字符串的顺序将输入值转换为变量。</p>
+<h2 id="fscanf">Fscanf</h2>
+<p><code>fmt</code> 包中的 <code>Fscanf</code> 函数可以从一个 <code>io.Reader</code> 类型的变量读取输入并根据格式字符串将输入值转换为变量。它的用法类似于 <code>Scanf</code> 函数，但是你可以指定输入来源。</p>
+<p>例如，你可以使用 <code>Fscanf</code> 函数从标准输入读取输入：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;Enter an integer, a float, and a string: &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">i</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">f</span> <span class="kt">float64</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">s</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Fscanf</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdin</span><span class="p">,</span> <span class="s">&#34;%d %f %s\n&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">i</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">f</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;You entered:&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">f</span><span class="p">,</span> <span class="nx">s</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="stringer">Stringer</h2>
+<p><code>fmt</code> 包中的 <code>Stringer</code> 接口表示一种可以返回其字符串表示的类型。如果一个类型实现了 <code>Stringer</code> 接口，那么在调用 <code>fmt</code> 包中的输出函数（例如 <code>Print</code>、<code>Println</code>、<code>Printf</code>）时，会调用这个类型的 <code>String</code> 方法，并将返回值作为字符串输出。</p>
+<p>例如，你可以为自定义类型 <code>Person</code> 实现 <code>Stringer</code> 接口，使得在调用 <code>fmt</code> 包中的输出函数时，能够将 <code>Person</code> 类型的值输出为指定的字符串。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Name</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Age</span>  <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="nx">Person</span><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%s is %d years old&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Age</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">p</span> <span class="o">:=</span> <span class="nx">Person</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Alice&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">30</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>  <span class="c1">// 输出 &#34;Alice is 30 years old&#34;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>请注意，如果一个类型实现了 <code>Stringer</code> 接口，那么在调用输出函数时，会忽略其他的格式说明符。例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%v\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>  <span class="c1">// 输出 &#34;Alice is 30 years old&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%+v\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>  <span class="c1">// 输出 &#34;Alice is 30 years old&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%#v\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>  <span class="c1">// 输出 &#34;main.Person{Name:\&#34;Alice\&#34;, Age:30}&#34;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">peng</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-12-26
+        
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/go/">go</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/golang%E9%AB%98%E6%95%88%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%9E%E6%8E%A5/">
+            <span class="next-text nav-default">Golang高效字符串连接</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+    <script src="https://utteranc.es/client.js"
+            repo="pokitpeng/pokitpeng.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="pokit@qq.com" class="iconfont icon-email" title="email"></a>
+  <a href="http://pokitpeng.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2020 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>peng</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/timeago.js@3.0.2/dist/timeago.min.js" integrity="sha256-jwCP0NAdCBloaIWTWHmW4i3snUNMHUNO+jr9rYd2iOI=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/timeago.js@3.0.2/dist/timeago.locales.min.js" integrity="sha256-ZwofwC1Lf/faQCzN7nZtfijVV6hSwxjQMwXL4gn9qU8=" crossorigin="anonymous"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "zh-cn".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

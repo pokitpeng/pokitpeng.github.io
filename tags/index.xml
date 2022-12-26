@@ -6,7 +6,16 @@
     <description>Recent content in Tags on Peng blog site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 22 Dec 2020 21:48:42 +0800</lastBuildDate><atom:link href="http://pokitpeng.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 26 Dec 2020 22:21:01 +0800</lastBuildDate><atom:link href="http://pokitpeng.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>go</title>
+      <link>http://pokitpeng.github.io/tags/go/</link>
+      <pubDate>Sat, 26 Dec 2020 22:21:01 +0800</pubDate>
+      
+      <guid>http://pokitpeng.github.io/tags/go/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Golang</title>
       <link>http://pokitpeng.github.io/tags/golang/</link>
