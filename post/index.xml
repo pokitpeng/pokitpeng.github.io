@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Peng blog site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 26 Dec 2020 22:21:01 +0800</lastBuildDate><atom:link href="http://pokitpeng.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Dec 2020 10:58:56 +0800</lastBuildDate><atom:link href="http://pokitpeng.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Golang Slice注意点</title>
+      <link>http://pokitpeng.github.io/post/golang-slice%E6%B3%A8%E6%84%8F%E7%82%B9/</link>
+      <pubDate>Mon, 28 Dec 2020 10:58:56 +0800</pubDate>
+      
+      <guid>http://pokitpeng.github.io/post/golang-slice%E6%B3%A8%E6%84%8F%E7%82%B9/</guid>
+      <description>简介 在 Go 语言中，切片是一个引用类型，它是对底层数组的一个视图。切片的底层数组是由 Go 语言的内存分配器自动分配的，并且切片本身也存储在堆上。 切片</description>
+    </item>
+    
     <item>
       <title>Golang Fmt包详解</title>
       <link>http://pokitpeng.github.io/post/golang-fmt%E5%8C%85%E8%AF%A6%E8%A7%A3/</link>

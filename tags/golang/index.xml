@@ -6,7 +6,25 @@
     <description>Recent content in Golang on Peng blog site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 22 Dec 2020 21:48:42 +0800</lastBuildDate><atom:link href="http://pokitpeng.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Dec 2020 10:58:56 +0800</lastBuildDate><atom:link href="http://pokitpeng.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Golang Slice注意点</title>
+      <link>http://pokitpeng.github.io/post/golang-slice%E6%B3%A8%E6%84%8F%E7%82%B9/</link>
+      <pubDate>Mon, 28 Dec 2020 10:58:56 +0800</pubDate>
+      
+      <guid>http://pokitpeng.github.io/post/golang-slice%E6%B3%A8%E6%84%8F%E7%82%B9/</guid>
+      <description>简介 在 Go 语言中，切片是一个引用类型，它是对底层数组的一个视图。切片的底层数组是由 Go 语言的内存分配器自动分配的，并且切片本身也存储在堆上。 切片</description>
+    </item>
+    
+    <item>
+      <title>Golang Fmt包详解</title>
+      <link>http://pokitpeng.github.io/post/golang-fmt%E5%8C%85%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Sat, 26 Dec 2020 22:21:01 +0800</pubDate>
+      
+      <guid>http://pokitpeng.github.io/post/golang-fmt%E5%8C%85%E8%AF%A6%E8%A7%A3/</guid>
+      <description>fmt 包是 Go 语言的标准库之一，提供了多种格式化和输出文本的函数。下面是几种常见函数使用方式。 Printf Printf可以说是使用最广泛的函数，没有之一。官</description>
+    </item>
+    
     <item>
       <title>Golang高效字符串连接</title>
       <link>http://pokitpeng.github.io/post/golang%E9%AB%98%E6%95%88%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%9E%E6%8E%A5/</link>
