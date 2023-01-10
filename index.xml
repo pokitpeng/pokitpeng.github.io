@@ -17,6 +17,15 @@
     </item>
     
     <item>
+      <title>Golang for循环注意点</title>
+      <link>http://pokitpeng.github.io/post/golang-for%E5%BE%AA%E7%8E%AF%E6%B3%A8%E6%84%8F%E7%82%B9/</link>
+      <pubDate>Sun, 27 Dec 2020 23:47:34 +0800</pubDate>
+      
+      <guid>http://pokitpeng.github.io/post/golang-for%E5%BE%AA%E7%8E%AF%E6%B3%A8%E6%84%8F%E7%82%B9/</guid>
+      <description>在使用 Go 语言的for循环进行迭代时，有以下几点需要注意： Go 语言的 for 循环有三种形式，分别是标准的 for 循环、for-range 循环和 for-select 循环。你应该</description>
+    </item>
+    
+    <item>
       <title>Golang Fmt包详解</title>
       <link>http://pokitpeng.github.io/post/golang-fmt%E5%8C%85%E8%AF%A6%E8%A7%A3/</link>
       <pubDate>Sat, 26 Dec 2020 22:21:01 +0800</pubDate>
